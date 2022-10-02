@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="cf37999dfdb2487bb19de793c4b38139" Name="Diagram1">
+        <EntityTypeShape EntityType="Model_Proyecto.Asistencia" Width="1.5" PointX="10.5" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Carrera" Width="1.5" PointX="1.5" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Correos_Estudiantes" Width="1.5" PointX="8.25" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Correos_Profesores" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Curso" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Estudiante" Width="1.5" PointX="6" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Grupos" Width="1.5" PointX="6" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Matricula" Width="1.5" PointX="8.25" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Periodo" Width="1.5" PointX="3.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Profesore" Width="1.5" PointX="0.75" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Telefonos_Estudiantes" Width="1.5" PointX="8.25" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model_Proyecto.Telefonos_Profesores" Width="1.5" PointX="3" PointY="10.5" IsExpanded="true" />
+        <AssociationConnector Association="Model_Proyecto.FK_Asistencia_Matricula1" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Cursos_Carreras1" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Correos_Estudiantes_Estudiantes" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Correos_Profesores_Profesores" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Grupos_Cursos" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Matricula_Estudiantes" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Telefonos_Estudiantes_Estudiantes" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Grupos_Periodo" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Grupos_Profesores1" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Matricula_Grupos1" ManuallyRouted="false" />
+        <AssociationConnector Association="Model_Proyecto.FK_Telefonos_Profesores_Profesores" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

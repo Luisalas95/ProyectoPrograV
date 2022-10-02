@@ -1,14 +1,21 @@
 using System.Web.Http;
 using WebActivatorEx;
-using CapaCliente;
+using WebProyecto;
 using Swashbuckle.Application;
+using System.IO;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
-namespace CapaCliente
+namespace WebProyecto
 {
     public class SwaggerConfig
     {
+        protected static string GetXmlCommentsPath()
+        {
+            return Path.Combine(System.Web.HttpRuntime.AppDomainAppPath,
+
+                "bin", "WebProyecto.xml");
+        }
         public static void Register()
         {
             var thisAssembly = typeof(SwaggerConfig).Assembly;
@@ -32,7 +39,17 @@ namespace CapaCliente
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "CapaCliente");
+                        c.SingleApiVersion("v1", "Poryecto 1 Programación V").Description("Servicio de ejemplo Cliente")
+                           .TermsOfService("Términos de servicio.")
+                           .Contact(x => x
+                               .Name("Luis Salas Núñez | Victor Salgado Martinez")
+                               .Url("http://www.colaboranetwork.com")
+                               .Email("luis.salas.nunez@cuc.ac.cr | victor.salgado.martinez@cuc.cr"))
+                           .License(x => x
+                               .Name("Licencia")
+                               .Url("http://www.colaboranetwork.com"));
+                        c.IncludeXmlComments(GetXmlCommentsPath());
+                        c.PrettyPrint();
 
                         // If you want the output Swagger docs to be indented properly, enable the "PrettyPrint" option.
                         //
@@ -61,7 +78,7 @@ namespace CapaCliente
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")

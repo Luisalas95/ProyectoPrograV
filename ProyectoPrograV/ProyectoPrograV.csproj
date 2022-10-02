@@ -43,6 +43,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,12 +53,85 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asistencia.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Carrera.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
     <Compile Include="Class1.cs" />
+    <Compile Include="Correos_Estudiantes.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Correos_Profesores.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Curso.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Estudiante.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Grupos.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Matricula.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo_BD.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Modelo_BD.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo_BD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo_BD.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Modelo_BD.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Periodo.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Profesore.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Telefonos_Estudiantes.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Telefonos_Profesores.cs">
+      <DependentUpon>Modelo_BD.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="Modelo_BD.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Modelo_BD.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Modelo_BD.edmx.diagram">
+      <DependentUpon>Modelo_BD.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Modelo_BD.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Modelo_BD.edmx</DependentUpon>
+      <LastGenOutput>Modelo_BD.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Modelo_BD.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Modelo_BD.edmx</DependentUpon>
+      <LastGenOutput>Modelo_BD.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
