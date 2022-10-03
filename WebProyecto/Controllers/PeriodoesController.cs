@@ -25,9 +25,9 @@ namespace WebProyecto.Controllers
 
         // GET: api/Periodoes/5
         [ResponseType(typeof(Periodo))]
-        public async Task<IHttpActionResult> GetPeriodo(int id)
+        public async Task<IHttpActionResult> GetPeriodo(int id,int NumPerido)
         {
-            Periodo periodo = await db.Periodoes.FindAsync(id);
+            Periodo periodo = await db.Periodoes.FindAsync(id,NumPerido);
             if (periodo == null)
             {
                 return NotFound();
@@ -103,9 +103,9 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Periodoes/5
         [ResponseType(typeof(Periodo))]
-        public async Task<IHttpActionResult> DeletePeriodo(int id)
+        public async Task<IHttpActionResult> DeletePeriodo(int id, int NumPerido)
         {
-            Periodo periodo = await db.Periodoes.FindAsync(id);
+            Periodo periodo = await db.Periodoes.FindAsync(id, NumPerido);
             if (periodo == null)
             {
                 return NotFound();

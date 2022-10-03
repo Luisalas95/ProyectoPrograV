@@ -25,9 +25,9 @@ namespace WebProyecto.Controllers
 
         // GET: api/Estudiantes/5
         [ResponseType(typeof(Estudiante))]
-        public async Task<IHttpActionResult> GetEstudiante(string id)
+        public async Task<IHttpActionResult> GetEstudiante(string id, string TipoID)
         {
-            Estudiante estudiante = await db.Estudiantes.FindAsync(id);
+            Estudiante estudiante = await db.Estudiantes.FindAsync(TipoID,id);
             if (estudiante == null)
             {
                 return NotFound();
@@ -103,9 +103,9 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Estudiantes/5
         [ResponseType(typeof(Estudiante))]
-        public async Task<IHttpActionResult> DeleteEstudiante(string id)
+        public async Task<IHttpActionResult> DeleteEstudiante(string id, string TipoID)
         {
-            Estudiante estudiante = await db.Estudiantes.FindAsync(id);
+            Estudiante estudiante = await db.Estudiantes.FindAsync(TipoID,id);
             if (estudiante == null)
             {
                 return NotFound();

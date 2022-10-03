@@ -656,7 +656,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="tiusr5pl_Proyecto1PrograVEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="tiusr5pl_Proyecto1PrograVEntities" annotation:LazyLoadingEnabled="false">
           <EntitySet Name="Asistencias" EntityType="Self.Asistencia" />
           <EntitySet Name="Carreras" EntityType="Self.Carrera" />
           <EntitySet Name="Correos_Estudiantes" EntityType="Self.Correos_Estudiantes" />

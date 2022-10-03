@@ -18,6 +18,7 @@ namespace ProyectoPrograV
         public tiusr5pl_Proyecto1PrograVEntities()
             : base("name=tiusr5pl_Proyecto1PrograVEntities")
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

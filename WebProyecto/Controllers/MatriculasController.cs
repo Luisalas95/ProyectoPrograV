@@ -25,9 +25,9 @@ namespace WebProyecto.Controllers
 
         // GET: api/Matriculas/5
         [ResponseType(typeof(Matricula))]
-        public async Task<IHttpActionResult> GetMatricula(string id)
+        public async Task<IHttpActionResult> GetMatricula(string TipoID,string id, string codigoCurso)
         {
-            Matricula matricula = await db.Matriculas.FindAsync(id);
+            Matricula matricula = await db.Matriculas.FindAsync(TipoID,id,codigoCurso);
             if (matricula == null)
             {
                 return NotFound();
@@ -103,9 +103,9 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Matriculas/5
         [ResponseType(typeof(Matricula))]
-        public async Task<IHttpActionResult> DeleteMatricula(string id)
+        public async Task<IHttpActionResult> DeleteMatricula(string TipoID, string id, string codigoCurso)
         {
-            Matricula matricula = await db.Matriculas.FindAsync(id);
+            Matricula matricula = await db.Matriculas.FindAsync(TipoID,id,codigoCurso);
             if (matricula == null)
             {
                 return NotFound();

@@ -7,6 +7,8 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
+using System.Web.Caching;
+using Newtonsoft.Json.Serialization;
 
 namespace WebProyecto
 {
@@ -17,7 +19,15 @@ namespace WebProyecto
             // Código que se ejecuta al iniciar la aplicación
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);            
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            HttpConfiguration config = GlobalConfiguration.Configuration;
+            config.Formatters.JsonFormatter
+                .SerializerSettings
+                .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+
         }
     }
 }

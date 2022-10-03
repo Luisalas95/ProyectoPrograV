@@ -25,9 +25,9 @@ namespace WebProyecto.Controllers
 
         // GET: api/Telefonos_Estudiantes/5
         [ResponseType(typeof(Telefonos_Estudiantes))]
-        public async Task<IHttpActionResult> GetTelefonos_Estudiantes(string id)
+        public async Task<IHttpActionResult> GetTelefonos_Estudiantes(string telefono, string TipoID, string ID)
         {
-            Telefonos_Estudiantes telefonos_Estudiantes = await db.Telefonos_Estudiantes.FindAsync(id);
+            Telefonos_Estudiantes telefonos_Estudiantes = await db.Telefonos_Estudiantes.FindAsync(telefono,TipoID,ID);
             if (telefonos_Estudiantes == null)
             {
                 return NotFound();
@@ -103,9 +103,9 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Telefonos_Estudiantes/5
         [ResponseType(typeof(Telefonos_Estudiantes))]
-        public async Task<IHttpActionResult> DeleteTelefonos_Estudiantes(string id)
+        public async Task<IHttpActionResult> DeleteTelefonos_Estudiantes(string telefono, string TipoID, string ID)
         {
-            Telefonos_Estudiantes telefonos_Estudiantes = await db.Telefonos_Estudiantes.FindAsync(id);
+            Telefonos_Estudiantes telefonos_Estudiantes = await db.Telefonos_Estudiantes.FindAsync(telefono,TipoID,ID);
             if (telefonos_Estudiantes == null)
             {
                 return NotFound();

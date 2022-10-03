@@ -25,9 +25,9 @@ namespace WebProyecto.Controllers
 
         // GET: api/Asistencias/5
         [ResponseType(typeof(Asistencia))]
-        public async Task<IHttpActionResult> GetAsistencia(byte id)
+        public async Task<IHttpActionResult> GetAsistencia(byte CodigoGrupo, string CodCurso, string fecha, string tipoID,string ID)
         {
-            Asistencia asistencia = await db.Asistencias.FindAsync(id);
+            Asistencia asistencia = await db.Asistencias.FindAsync(CodigoGrupo, CodCurso,fecha,tipoID,ID);
             if (asistencia == null)
             {
                 return NotFound();
@@ -103,9 +103,9 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Asistencias/5
         [ResponseType(typeof(Asistencia))]
-        public async Task<IHttpActionResult> DeleteAsistencia(byte id)
+        public async Task<IHttpActionResult> DeleteAsistencia(byte CodigoGrupo, string CodCurso, string fecha, string tipoID, string ID)
         {
-            Asistencia asistencia = await db.Asistencias.FindAsync(id);
+            Asistencia asistencia = await db.Asistencias.FindAsync(CodigoGrupo, CodCurso, fecha, tipoID, ID);
             if (asistencia == null)
             {
                 return NotFound();

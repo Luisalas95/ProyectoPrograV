@@ -25,9 +25,9 @@ namespace WebProyecto.Controllers
 
         // GET: api/Correos_Profesores/5
         [ResponseType(typeof(Correos_Profesores))]
-        public async Task<IHttpActionResult> GetCorreos_Profesores(string id)
+        public async Task<IHttpActionResult> GetCorreos_Profesores(string correo, string tipoID, string id)
         {
-            Correos_Profesores correos_Profesores = await db.Correos_Profesores.FindAsync(id);
+            Correos_Profesores correos_Profesores = await db.Correos_Profesores.FindAsync(correo,tipoID,id);
             if (correos_Profesores == null)
             {
                 return NotFound();
