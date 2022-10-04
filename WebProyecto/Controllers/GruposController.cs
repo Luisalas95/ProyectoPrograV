@@ -25,9 +25,9 @@ namespace WebProyecto.Controllers
 
         // GET: api/Grupos/5
         [ResponseType(typeof(Grupos))]
-        public async Task<IHttpActionResult> GetGrupos(byte numgrupo,string codigocurso)
+        public async Task<IHttpActionResult> GetGrupos(byte id,string Codigo )
         {
-            Grupos grupos = await db.Grupos.FindAsync(numgrupo,codigocurso);
+            Grupos grupos = await db.Grupos.FindAsync(id,Codigo);
             if (grupos == null)
             {
                 return NotFound();
@@ -103,9 +103,9 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Grupos/5
         [ResponseType(typeof(Grupos))]
-        public async Task<IHttpActionResult> DeleteGrupos(byte numGrupo,string CodigoCurso)
+        public async Task<IHttpActionResult> DeleteGrupos(byte id)
         {
-            Grupos grupos = await db.Grupos.FindAsync(numGrupo,CodigoCurso);
+            Grupos grupos = await db.Grupos.FindAsync(id);
             if (grupos == null)
             {
                 return NotFound();
