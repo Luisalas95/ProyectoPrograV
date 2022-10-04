@@ -25,7 +25,7 @@ namespace WebProyecto.Controllers
 
         // GET: api/Telefonos_Profesores/5
         [ResponseType(typeof(Telefonos_Profesores))]
-        public async Task<IHttpActionResult> GetTelefonos_Profesores(string telefono, string TipoID, string ID)
+        public async Task<IHttpActionResult> GetTelefonos_Profesores(int telefono, string TipoID, string ID)
         {
             Telefonos_Profesores telefonos_Profesores = await db.Telefonos_Profesores.FindAsync(telefono,TipoID, ID);
             if (telefonos_Profesores == null)
