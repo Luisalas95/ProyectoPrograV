@@ -25,7 +25,7 @@ namespace WebProyecto.Controllers
 
         // GET: api/Asistencias/5
         [ResponseType(typeof(Asistencia))]
-        public async Task<IHttpActionResult> GetAsistencia(byte CodigoGrupo, string CodCurso, string fecha, string tipoID,string ID)
+        public async Task<IHttpActionResult> GetAsistencia(byte CodigoGrupo, string CodCurso, DateTime fecha, string tipoID,string ID)
         {
             Asistencia asistencia = await db.Asistencias.FindAsync(CodigoGrupo, CodCurso,fecha,tipoID,ID);
             if (asistencia == null)
