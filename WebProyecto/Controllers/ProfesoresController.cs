@@ -116,7 +116,34 @@ namespace WebProyecto.Controllers
 
             return Ok(profesore);
         }
+        //--------------------------------
 
+
+        [Route("api/Profesores/DatosProfesores")]
+        [HttpGet]
+        public async Task<IHttpActionResult> getDatosProfesores(string id, string TipoID)
+        {
+            Profesore Profesor = await db.Profesores.FindAsync(TipoID, id);
+
+            if (Profesor == null)
+            {
+                return NotFound();
+            }
+
+            var idQuery =
+           from ord1 in db.Profesores
+           from ord in db.Telefonos_Profesores
+           from ord2 in db.Correos_Profesores
+           where ord.Identificacion_Profesor == ord1.Identificacion && ord.Tipo_ID_Profesor == ord1.Tipo_ID && ord2.Identificacion_Profesor == ord1.Identificacion && ord2.Tipo_ID_Profesor == ord1.Tipo_ID
+           select new { ord.Tipo_ID_Profesor, ord.Identificacion_Profesor, ord1.Nombre, ord1.Primer_Apellido, ord1.Segundo_apellido, ord.Numero_Telefono, ord1.Fecha_Nacimiento, ord2.Corre_Electronico };
+
+
+
+            return Ok(idQuery);
+        }
+
+
+        //------------------------
         protected override void Dispose(bool disposing)
         {
             if (disposing)

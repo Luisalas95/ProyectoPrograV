@@ -24,6 +24,8 @@ namespace WebProyecto.Controllers
             return db.Estudiantes;
         }
 
+       
+
         // GET: api/Estudiantes/5
         [ResponseType(typeof(Estudiante))]
         public async Task<IHttpActionResult> GetEstudiante(string id, string TipoID)
@@ -37,6 +39,10 @@ namespace WebProyecto.Controllers
             return Ok(estudiante);
          
         }
+
+
+
+
 
         // PUT: api/Estudiantes/5
         [ResponseType(typeof(void))]
@@ -173,6 +179,43 @@ namespace WebProyecto.Controllers
             return Ok(estudiante);
         }
 
+
+
+        //------------------------- getDatosEstudiante
+
+        [Route("api/Estudiantes/DatosEstudiante")]
+        [HttpGet]
+        public async Task<IHttpActionResult> getDatosEstudiante(string id, string TipoID)
+        {
+            Estudiante estudiante = await db.Estudiantes.FindAsync(TipoID, id);
+
+            if (estudiante == null )
+            {
+                 return NotFound();
+              }
+
+                var idQuery =
+               from ord1 in db.Estudiantes
+               from ord in db.Telefonos_Estudiantes
+               from ord2 in db.Correos_Estudiantes
+               where ord.Identificacion_Estudiante == ord1.Identificacion && ord.Tipo_ID_Estudiante==ord1.Tipo_ID && ord2.Identificacion_Estudiante == ord1.Identificacion && ord2.Tipo_ID_Estudiante == ord1.Tipo_ID
+               select new { ord.Tipo_ID_Estudiante, ord.Identificacion_Estudiante, ord1.Nombre, ord1.Primer_Apellido,ord1.Segundo_apellido,ord.Numero_Telefono,ord1.Fecha_Nacimiento,ord2.Corre_Electronico};
+           
+
+
+            return Ok(idQuery);
+        }
+
+        //------------------------------
+
+
+
+
+
+        //------------------------- 
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -191,6 +234,8 @@ namespace WebProyecto.Controllers
         {
             return db.Estudiantes.Count(e => e.Identificacion == id) > 0;
         }
+
+
 
     }
 }

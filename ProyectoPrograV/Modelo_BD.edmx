@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Model_Proyecto.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Model_Proyecto.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Asistencia">
           <Key>
             <PropertyRef Name="Codigo_Grupo" />
@@ -122,7 +122,7 @@
             <PropertyRef Name="Tipo_ID_Estudiante" />
             <PropertyRef Name="Identificacion_Estudiante" />
           </Key>
-          <Property Name="Numero_Telefono" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Numero_Telefono" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="Tipo_ID_Estudiante" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="Identificacion_Estudiante" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
@@ -346,8 +346,7 @@
             <End Role="Telefonos_Profesores" EntitySet="Telefonos_Profesores" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model_Proyecto" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -488,7 +487,7 @@
             <PropertyRef Name="Tipo_ID_Estudiante" />
             <PropertyRef Name="Identificacion_Estudiante" />
           </Key>
-          <Property Name="Numero_Telefono" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Numero_Telefono" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Tipo_ID_Estudiante" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Identificacion_Estudiante" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Estudiante" Relationship="Self.FK_Telefonos_Estudiantes_Estudiantes" FromRole="Telefonos_Estudiantes" ToRole="Estudiantes" />

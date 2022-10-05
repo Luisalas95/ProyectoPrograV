@@ -39,7 +39,7 @@ namespace WebProyecto
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "Poryecto 1 Programación V").Description("Servicio de ejemplo Cliente")
+                        c.SingleApiVersion("v1", "Poryecto 1 Programación V").Description("Servicio de control asistencia")
                            .TermsOfService("Términos de servicio.")
                            .Contact(x => x
                                .Name("Luis Salas Núñez | Victor Salgado Martinez")

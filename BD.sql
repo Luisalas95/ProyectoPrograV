@@ -155,6 +155,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+select *from Grupos
 CREATE TABLE [dbo].[Matricula](
 	[Numero_Grupo] [tinyint] NOT NULL,
 	[Tipo_Matricula] [varchar](15) NOT NULL,
@@ -182,7 +183,7 @@ CREATE TABLE [dbo].[Periodo](
 	[Fecha_Fin] [date] NOT NULL,
 	[Estado] [char](2) NOT NULL,
  CONSTRAINT [PK_Periodo] PRIMARY KEY CLUSTERED 
-(
+(Asis
 	[Anno] ASC,
 	[NumeroPeriodo] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -296,3 +297,14 @@ REFERENCES [dbo].[Profesores] ([Tipo_ID], [Identificacion])
 GO
 ALTER TABLE [dbo].[Telefonos_Profesores] CHECK CONSTRAINT [FK_Telefonos_Profesores_Profesores]
 GO
+select *from Asistencia
+select *from Correos_Estudiantes
+select *from Correos_Profesores
+select *from Grupos
+select *from Matricula
+select *from Periodo
+select *from  Telefonos_Estudiantes 
+select *from  Telefonos_Profesores
+select *from Cursos
+select*from Estudiantes
+select *from Profesores
