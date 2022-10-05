@@ -117,6 +117,36 @@ namespace WebProyecto.Controllers
             return Ok(asistencia);
         }
 
+
+        //--------------------------------DatosASistencia
+
+
+        [Route("api/Asistencia/AsistenciaDesgloce")]
+        [HttpGet]
+        public async Task<IHttpActionResult> getDatosAsistencia(string id, string TipoID)
+        {
+           Estudiante estudiante = await db.Estudiantes.FindAsync(TipoID, id);
+
+            if (estudiante == null)
+            {
+                return NotFound();
+            }
+
+            var idQuery =
+           from ord1 in db.Estudiantes
+           from ord in db.Asistencias
+           
+           where ord.Identificacion_Estudiante == ord1.Identificacion && ord.Tipo_ID_Esutiante == ord1.Tipo_ID
+           select new { ord.Tipo_ID_Esutiante, ord.Identificacion_Estudiante, ord1.Nombre, ord1.Primer_Apellido, ord1.Segundo_apellido, ord.Codigo_Curso,ord.Codigo_Grupo,ord.Fecha_Asistencia,ord.Tipo_Registro };
+
+
+
+            return Ok(idQuery);
+        }
+
+
+        //------------------------
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

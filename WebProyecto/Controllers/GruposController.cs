@@ -116,6 +116,36 @@ namespace WebProyecto.Controllers
 
             return Ok(grupos);
         }
+        //--------------------------------
+
+
+        [Route("api/Grupos/DatosGrupo")]
+        [HttpGet]
+        public async Task<IHttpActionResult> getDatosGrupo(int NumGrupo, string CodCurso)
+        {
+            Grupos grupos = await db.Grupos .FindAsync(NumGrupo, CodCurso);
+
+            if (grupos == null)
+            {
+                return NotFound();
+            }
+
+            var idQuery =
+           from ord1 in db.Cursos
+           from ord in db.Grupos
+           from ord2 in db.Profesores
+           where ord.Identificacion_Profesor == ord2.Identificacion && ord.Tipo_ID_Profeso == ord2.Tipo_ID && ord.Codigo_Curs==ord1.Codigo_Curso 
+           select new { ord.Numero_Grupo,ord1.Codigo_Curso,ord1.Nombre_Curso,ord.Periodo,ord.Horario,ord2.Nombre,ord2.Primer_Apellido,ord2.Segundo_apellido};
+
+
+
+            return Ok(idQuery);
+        }
+
+
+        //------------------------
+
+
 
         protected override void Dispose(bool disposing)
         {
