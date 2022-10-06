@@ -7,7 +7,7 @@ using System.Web;
 
 namespace WebProyecto.Models
 {
-    public class estudiante
+    public class profesor
     {
         [Required]
 

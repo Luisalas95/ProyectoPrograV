@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ProyectoPrograV;
+using Swashbuckle.Swagger;
 using WebProyecto.Models;
 
 namespace WebProyecto.Controllers
@@ -41,24 +42,26 @@ namespace WebProyecto.Controllers
         }
 
 
-
-
-
         // PUT: api/Estudiantes/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutEstudiante(string id, Estudiante estudiante)
+        public async Task<IHttpActionResult> PutEstudiante(string id, string tipoId, estudianteActualiza e)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != estudiante.Tipo_ID)
+            Estudiante e2 = new Estudiante()
             {
-                return BadRequest();
-            }
+                Nombre = e.Nombre,
+                Primer_Apellido = e.primerApellido,
+                Segundo_apellido = e.SegundoApellido,
+                Fecha_Nacimiento = e.FechaNacimiento,
+                Identificacion = id,
+                Tipo_ID = tipoId,
+            };
 
-            db.Entry(estudiante).State = EntityState.Modified;
+            db.Entry(e2).State = EntityState.Modified;
+
 
             try
             {
@@ -66,7 +69,7 @@ namespace WebProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EstudianteExists(id))
+                if (!EstudianteExists(tipoId) & !EstudianteExists2(id))
                 {
                     return NotFound();
                 }
@@ -76,41 +79,11 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Estudiantes
-        [ResponseType(typeof(Estudiante))]
-        public async Task<IHttpActionResult> PostEstudiante(Estudiante estudiante)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Estudiantes.Add(estudiante);
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (EstudianteExists(estudiante.Tipo_ID))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtRoute("DefaultApi", new { id = estudiante.Tipo_ID }, estudiante);
+            return Ok(e2);
         }
 
         [HttpPost]
-        [Route("api/Estudiantes/crearEstudiante")]
+        [Route("api/Estudiantes/CrearEstudiante")]
         [ResponseType(typeof(estudiante))]
         public async Task<IHttpActionResult> CrearEstudiante
          ([FromBody] estudiante e) 
@@ -130,17 +103,64 @@ namespace WebProyecto.Controllers
                 Identificacion = e.Identificacion,
                 Fecha_Nacimiento = e.FechaNacimiento
             };
-
             db.Estudiantes.Add(e2);
+            //Luego de agregar el estudiante validamos y agregamos el telefono y correo
 
+            string[] telefonos = e.NumerosTelefono.Split();
+          
+                
+            //Validamos que no vengan telefonos repetidos 
+           bool estadoRepetidosTele = e.Validarepetidos(telefonos);
+            if (estadoRepetidosTele == true)
+            {
+                return BadRequest ("No puede ingresar numeros de telefono repetidos");
+            }
+            else
+            {
+                foreach (string telefono in telefonos)
+                {
+                    Telefonos_Estudiantes T1 = new Telefonos_Estudiantes()
+                    {
+                        Identificacion_Estudiante = e2.Identificacion,
+                        Tipo_ID_Estudiante = e2.Tipo_ID,
+                        Numero_Telefono = telefono.ToString(),
+                   
+                    
+                    };
+                    db.Telefonos_Estudiantes.Add(T1);
 
-            ///
+                }
 
+            }
 
+            //Validamos que no vengan correos repetidos
+            string[] correos = e.CorreoEle.Split();
+          bool EstadoRepetidoCorreo =  e.Validarepetidos(correos);
+            if (EstadoRepetidoCorreo == true)
+            {
+                return BadRequest("No puede ingresar correos electronicos repetidos");
+            }
+            else
+            {
+                //Si no vienen repetidos recorremos el arreglo de String y agregamos cada uno
+                foreach (string correo in correos)
+                {
+                    Correos_Estudiantes C1 = new Correos_Estudiantes()
+                    {
+                        Identificacion_Estudiante = e2.Identificacion,
+                        Tipo_ID_Estudiante = e2.Tipo_ID,
+                        Corre_Electronico = correo.ToString(),
+                    };
+                    db.Correos_Estudiantes.Add(C1);
+
+                }
+
+            }
 
             try
             {
                 await db.SaveChangesAsync();
+
             }
             catch (DbUpdateException)
             {
@@ -154,7 +174,13 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = e.tipo_ID }, e.Identificacion);
+          //  var response = Request.CreateResponse(HttpStatusCode.Created);
+            //Incluir el url del nuevo recurso creado
+           // string uri = Url.Link("InserEstudian", new { id = e2.Identificacion });
+           // response.Headers.Location = new Uri(uri);
+
+           
+            return Ok(e2);
         }
 
 
@@ -225,16 +251,17 @@ namespace WebProyecto.Controllers
             base.Dispose(disposing);
         }
 
-        private bool EstudianteExists(string id)
+        private bool EstudianteExists(string tipoid)
         {
-            return db.Estudiantes.Count(e => e.Tipo_ID == id) > 0;
+            return db.Estudiantes.Count(e => e.Tipo_ID == tipoid) > 0;
         }
 
-        private bool EstudianteExists2(string id)
+        private bool EstudianteExists2(string identificacion)
         {
-            return db.Estudiantes.Count(e => e.Identificacion == id) > 0;
+            return db.Estudiantes.Count(e => e.Identificacion == identificacion) > 0;
         }
 
+        
 
 
     }
