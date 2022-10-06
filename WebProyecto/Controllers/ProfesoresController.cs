@@ -73,9 +73,9 @@ namespace WebProyecto.Controllers
         }
 
         [HttpPost]
-        [Route("api/Estudiantes/CrearProfesor")]
+        [Route("api/Profesores/CrearProfesor")]
         [ResponseType(typeof(profesor))]
-        public async Task<IHttpActionResult> CrearProfesor
+        public async Task<IHttpActionResult> postProfesor
       ([FromBody] profesor p)
 
         {
@@ -139,7 +139,7 @@ namespace WebProyecto.Controllers
                     {
                         Identificacion_Profesor = p1.Identificacion,
                         Tipo_ID_Profesor = p1.Tipo_ID,
-                        Corre_Electronico= correo.ToString(),
+                        Corre_Electronico = correo.ToString(),
                     };
                     db.Correos_Profesores.Add(C1);
 
@@ -163,6 +163,8 @@ namespace WebProyecto.Controllers
                     throw;
                 }
             }
+            return Ok(p1);
+        }
 
             //  var response = Request.CreateResponse(HttpStatusCode.Created);
             //Incluir el url del nuevo recurso creado
@@ -171,12 +173,24 @@ namespace WebProyecto.Controllers
 
 
 
+        //------------------------
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-            // DELETE: api/Profesores/5
-            [ResponseType(typeof(Profesore))]
+
+
+
+        // DELETE: api/Profesores/5
+        [ResponseType(typeof(Profesore))]
         public async Task<IHttpActionResult> DeleteProfesore(string tipoID, string id)
         {
-            Profesore profesore = await db.Profesores.FindAsync(tipoID,id);
+            Profesore profesore = await db.Profesores.FindAsync(tipoID, id);
             if (profesore == null)
             {
                 return NotFound();
@@ -205,7 +219,7 @@ namespace WebProyecto.Controllers
            from ord1 in db.Profesores
            from ord in db.Telefonos_Profesores
            from ord2 in db.Correos_Profesores
-           where TipoID==ord1.Tipo_ID&& id==ord1.Identificacion&&ord.Identificacion_Profesor == ord1.Identificacion && ord.Tipo_ID_Profesor == ord1.Tipo_ID && ord2.Identificacion_Profesor == ord1.Identificacion && ord2.Tipo_ID_Profesor == ord1.Tipo_ID
+           where TipoID == ord1.Tipo_ID && id == ord1.Identificacion && ord.Identificacion_Profesor == ord1.Identificacion && ord.Tipo_ID_Profesor == ord1.Tipo_ID && ord2.Identificacion_Profesor == ord1.Identificacion && ord2.Tipo_ID_Profesor == ord1.Tipo_ID
            select new { ord.Tipo_ID_Profesor, ord.Identificacion_Profesor, ord1.Nombre, ord1.Primer_Apellido, ord1.Segundo_apellido, ord.Numero_Telefono, ord1.Fecha_Nacimiento, ord2.Corre_Electronico };
 
 
@@ -214,15 +228,8 @@ namespace WebProyecto.Controllers
         }
 
 
-        //------------------------
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+
+
 
         private bool ProfesoreExists(string tipoid)
         {
@@ -234,4 +241,8 @@ namespace WebProyecto.Controllers
             return db.Profesores.Count(e => e.Identificacion == id) > 0;
         }
     }
+
+
+
+
 }

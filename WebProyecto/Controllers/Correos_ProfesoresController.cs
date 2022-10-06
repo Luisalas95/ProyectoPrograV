@@ -71,35 +71,7 @@ namespace WebProyecto.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Correos_Profesores
-        [ResponseType(typeof(Correos_Profesores))]
-        public async Task<IHttpActionResult> PostCorreos_Profesores(Correos_Profesores correos_Profesores)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Correos_Profesores.Add(correos_Profesores);
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (Correos_ProfesoresExists(correos_Profesores.Corre_Electronico))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtRoute("DefaultApi", new { id = correos_Profesores.Corre_Electronico }, correos_Profesores);
-        }
+       
 
         // DELETE: api/Correos_Profesores/5
         [ResponseType(typeof(Correos_Profesores))]

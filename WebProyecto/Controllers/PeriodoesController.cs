@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ProyectoPrograV;
+using WebProyecto.Models;
 
 namespace WebProyecto.Controllers
 {
@@ -71,16 +72,36 @@ namespace WebProyecto.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Periodoes
-        [ResponseType(typeof(Periodo))]
-        public async Task<IHttpActionResult> PostPeriodo(Periodo periodo)
+    
+
+        [HttpPost]
+        [Route("api/Periodoes/Crearperiodo")]
+        [ResponseType(typeof(periodos))]
+        public async Task<IHttpActionResult> Crearperiodo
+      ([FromBody] periodos p)
+
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Periodoes.Add(periodo);
+            //Validamos que solo exista un estado activo en el periodo
+
+            if (EstadoActivoExist(p.estado))
+            {
+                return BadRequest("Solo puede existir un periodo activo");
+
+            }
+            Periodo P1 = new Periodo()
+            {
+                Anno = p.anno,
+                NumeroPeriodo = p.numeroPeriodo,
+                Fecha_Inicio = p.fechaInicio,
+                Fecha_Fin = p.fechafinal,
+                Estado = p.estado
+            };
+            db.Periodoes.Add(P1);
 
             try
             {
@@ -88,7 +109,7 @@ namespace WebProyecto.Controllers
             }
             catch (DbUpdateException)
             {
-                if (PeriodoExists(periodo.Anno))
+                if (PeriodoExists(p.anno) & PeriodoExistsNuPeriodo(p.numeroPeriodo))
                 {
                     return Conflict();
                 }
@@ -98,8 +119,13 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = periodo.Anno }, periodo);
+            return Ok(P1);
+
+
         }
+
+
+
 
         // DELETE: api/Periodoes/5
         [ResponseType(typeof(Periodo))]
@@ -129,6 +155,16 @@ namespace WebProyecto.Controllers
         private bool PeriodoExists(int id)
         {
             return db.Periodoes.Count(e => e.Anno == id) > 0;
+        }
+
+        private bool PeriodoExistsNuPeriodo(int id)
+        {
+            return db.Periodoes.Count(e => e.NumeroPeriodo == id) > 0;
+        }
+
+        private bool EstadoActivoExist(string estado)
+        {
+            return db.Periodoes.Count(e => e.Estado == estado) > 0;
         }
     }
 }

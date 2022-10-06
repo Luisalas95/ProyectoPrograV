@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ProyectoPrograV;
+using WebProyecto.Models;
 
 namespace WebProyecto.Controllers
 {
@@ -71,24 +72,44 @@ namespace WebProyecto.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Cursoes
-        [ResponseType(typeof(Curso))]
-        public async Task<IHttpActionResult> PostCurso(Curso curso)
+   
+
+
+        [HttpPost]
+        [Route("api/Cursoes/CrearCurso")]
+        [ResponseType(typeof(cursos))]
+        public async Task<IHttpActionResult> Crearcurso
+        ([FromBody] cursos c)
+
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            // Validar que la carrera exista para poder ligarla al curso
+            if (!CarreraExists(c.codigocarrera))
+            {
+                return NotFound();
+            }
+            Curso C1 = new Curso()
+            {
+                Codigo_Carrera = c.codigocarrera,
+                Nombre_Curso = c.nombrecurso,
+                Codigo_Curso = c.codigocurso,
 
-            db.Cursos.Add(curso);
+            };
+
+
+            db.Cursos.Add(C1);
 
             try
             {
                 await db.SaveChangesAsync();
             }
+            //validar que el curso no este repetido
             catch (DbUpdateException)
             {
-                if (CursoExists(curso.Codigo_Curso))
+                if (CursoExists(c.codigocurso))
                 {
                     return Conflict();
                 }
@@ -98,8 +119,12 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = curso.Codigo_Curso }, curso);
+            return Ok(C1);
+
         }
+
+
+
 
         // DELETE: api/Cursoes/5
         [ResponseType(typeof(Curso))]
@@ -129,6 +154,12 @@ namespace WebProyecto.Controllers
         private bool CursoExists(string id)
         {
             return db.Cursos.Count(e => e.Codigo_Curso == id) > 0;
+        }
+
+
+        private bool CarreraExists(string id)
+        {
+            return db.Carreras.Count(e => e.Codigo_Carrera == id) > 0;
         }
     }
 }

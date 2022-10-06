@@ -71,36 +71,7 @@ namespace WebProyecto.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Correos_Estudiantes
-        [ResponseType(typeof(Correos_Estudiantes))]
-        public async Task<IHttpActionResult> PostCorreos_Estudiantes(Correos_Estudiantes correos_Estudiantes)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Correos_Estudiantes.Add(correos_Estudiantes);
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (Correos_EstudiantesExists(correos_Estudiantes.Corre_Electronico))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtRoute("DefaultApi", new { id = correos_Estudiantes.Corre_Electronico }, correos_Estudiantes);
-        }
-
+        
         // DELETE: api/Correos_Estudiantes/5
         [ResponseType(typeof(Correos_Estudiantes))]
         public async Task<IHttpActionResult> DeleteCorreos_Estudiantes(string id)

@@ -71,35 +71,7 @@ namespace WebProyecto.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Telefonos_Profesores
-        [ResponseType(typeof(Telefonos_Profesores))]
-        public async Task<IHttpActionResult> PostTelefonos_Profesores(Telefonos_Profesores telefonos_Profesores)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Telefonos_Profesores.Add(telefonos_Profesores);
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (Telefonos_ProfesoresExists(telefonos_Profesores.Numero_Telefono))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtRoute("DefaultApi", new { id = telefonos_Profesores.Numero_Telefono }, telefonos_Profesores);
-        }
+        
 
         // DELETE: api/Telefonos_Profesores/5
         [ResponseType(typeof(Telefonos_Profesores))]

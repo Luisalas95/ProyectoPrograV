@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ProyectoPrograV;
+using WebProyecto.Models;
 
 namespace WebProyecto.Controllers
 {
@@ -71,16 +72,26 @@ namespace WebProyecto.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Carreras
-        [ResponseType(typeof(Carrera))]
-        public async Task<IHttpActionResult> PostCarrera(Carrera carrera)
+        [HttpPost]
+        [Route("api/Carreras/CrearCarrera")]
+        [ResponseType(typeof(carreras))]
+        public async Task<IHttpActionResult> CrearCarrera
+        ([FromBody] carreras c)
+        
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Carreras.Add(carrera);
+            Carrera c1 = new Carrera()
+            {
+                Codigo_Carrera = c.codigocarrera,
+                Nombre_Carrera = c.nombreCarrera,
+            };
+
+
+            db.Carreras.Add(c1);
 
             try
             {
@@ -88,7 +99,7 @@ namespace WebProyecto.Controllers
             }
             catch (DbUpdateException)
             {
-                if (CarreraExists(carrera.Codigo_Carrera))
+                if (CarreraExists(c.codigocarrera))
                 {
                     return Conflict();
                 }
@@ -98,9 +109,13 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = carrera.Codigo_Carrera }, carrera);
+            return Ok(c);
+
         }
 
+
+
+        
         // DELETE: api/Carreras/5
         [ResponseType(typeof(Carrera))]
         public async Task<IHttpActionResult> DeleteCarrera(string id)

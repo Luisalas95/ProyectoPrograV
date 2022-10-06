@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ProyectoPrograV;
+using WebProyecto.Models;
 
 namespace WebProyecto.Controllers
 {
@@ -101,8 +102,55 @@ namespace WebProyecto.Controllers
             return CreatedAtRoute("DefaultApi", new { id = grupos.Numero_Grupo }, grupos);
         }
 
-        // DELETE: api/Grupos/5
-        [ResponseType(typeof(Grupos))]
+
+        [HttpPost]
+        [Route("api/Grupos/CrearGrupo")]
+        [ResponseType(typeof(grupos))]
+        public async Task<IHttpActionResult> CrearGrupo
+        ([FromBody] grupos g)
+
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            //Validamos que los campos foranenos en la tabla existan
+            if (!CursoExists(g.codigocurso))
+            {
+                return BadRequest("El codigo del curso ingresado no existe");
+            }
+
+
+
+            
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (GruposExists(g.numerogrupo) & GruposExistsCodigoCurso(g.codigocurso))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
+
+        }
+
+
+
+
+            // DELETE: api/Grupos/5
+            [ResponseType(typeof(Grupos))]
         public async Task<IHttpActionResult> DeleteGrupos(byte id)
         {
             Grupos grupos = await db.Grupos.FindAsync(id);
@@ -159,5 +207,27 @@ namespace WebProyecto.Controllers
         {
             return db.Grupos.Count(e => e.Numero_Grupo == id) > 0;
         }
+
+        private bool GruposExistsCodigoCurso(string id)
+        {
+            return db.Grupos.Count(e => e.Codigo_Curs == id) > 0;
+        }
+
+        private bool CursoExists(string id)
+        {
+            return db.Cursos.Count(e => e.Codigo_Curso == id) > 0;
+        }
+
+
+        private bool ProfesoreExists(string tipoid)
+        {
+            return db.Profesores.Count(e => e.Tipo_ID == tipoid) > 0;
+        }
+
+        private bool ProfesoreExists2(string id)
+        {
+            return db.Profesores.Count(e => e.Identificacion == id) > 0;
+        }
+
     }
 }
