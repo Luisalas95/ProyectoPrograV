@@ -224,7 +224,7 @@ namespace WebProyecto.Controllers
                from ord1 in db.Estudiantes
                from ord in db.Telefonos_Estudiantes
                from ord2 in db.Correos_Estudiantes
-               where ord.Identificacion_Estudiante == ord1.Identificacion && ord.Tipo_ID_Estudiante==ord1.Tipo_ID && ord2.Identificacion_Estudiante == ord1.Identificacion && ord2.Tipo_ID_Estudiante == ord1.Tipo_ID
+               where TipoID== ord.Tipo_ID_Estudiante && id==ord.Identificacion_Estudiante && ord.Identificacion_Estudiante == ord1.Identificacion && ord.Tipo_ID_Estudiante==ord1.Tipo_ID && ord2.Identificacion_Estudiante == ord1.Identificacion && ord2.Tipo_ID_Estudiante == ord1.Tipo_ID
                select new { ord.Tipo_ID_Estudiante, ord.Identificacion_Estudiante, ord1.Nombre, ord1.Primer_Apellido,ord1.Segundo_apellido,ord.Numero_Telefono,ord1.Fecha_Nacimiento,ord2.Corre_Electronico};
            
 
@@ -236,7 +236,7 @@ namespace WebProyecto.Controllers
 
 
 
-
+      
 
         //------------------------- 
 

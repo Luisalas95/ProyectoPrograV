@@ -136,7 +136,7 @@ namespace WebProyecto.Controllers
            from ord1 in db.Estudiantes
            from ord in db.Asistencias
            
-           where ord.Identificacion_Estudiante == ord1.Identificacion && ord.Tipo_ID_Esutiante == ord1.Tipo_ID
+           where TipoID== ord.Tipo_ID_Esutiante &&id == ord1.Identificacion && ord.Identificacion_Estudiante == ord1.Identificacion && ord.Tipo_ID_Esutiante == ord1.Tipo_ID
            select new { ord.Tipo_ID_Esutiante, ord.Identificacion_Estudiante, ord1.Nombre, ord1.Primer_Apellido, ord1.Segundo_apellido, ord.Codigo_Curso,ord.Codigo_Grupo,ord.Fecha_Asistencia,ord.Tipo_Registro };
 
 
