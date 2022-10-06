@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ProyectoPrograV;
+using WebProyecto.Models;
 
 namespace WebProyecto.Controllers
 {
@@ -71,24 +72,89 @@ namespace WebProyecto.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Profesores
-        [ResponseType(typeof(Profesore))]
-        public async Task<IHttpActionResult> PostProfesore(Profesore profesore)
+        [HttpPost]
+        [Route("api/Estudiantes/CrearProfesor")]
+        [ResponseType(typeof(profesor))]
+        public async Task<IHttpActionResult> CrearProfesor
+      ([FromBody] profesor p)
+
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Profesores.Add(profesore);
+            Profesore p1 = new Profesore()
+            {
+                Nombre = p.Nombre,
+                Primer_Apellido = p.primerApellido,
+                Segundo_apellido = p.SegundoApellido,
+                Tipo_ID = p.tipo_ID,
+                Identificacion = p.Identificacion,
+                Fecha_Nacimiento = p.FechaNacimiento
+            };
+            db.Profesores.Add(p1);
+            //Luego de agregar el estudiante validamos y agregamos el telefono y correo
+
+            string[] telefonos = p.NumerosTelefono.Split();
+
+
+            //Validamos que no vengan telefonos repetidos 
+            bool estadoRepetidosTele = p.Validarepetidos(telefonos);
+            if (estadoRepetidosTele == true)
+            {
+                return BadRequest("No puede ingresar numeros de telefono repetidos");
+            }
+            else
+            {
+                foreach (string telefono in telefonos)
+                {
+                    Telefonos_Profesores T1 = new Telefonos_Profesores()
+                    {
+                        Identificacion_Profesor = p1.Identificacion,
+                        Tipo_ID_Profesor = p1.Tipo_ID,
+                        Numero_Telefono = int.Parse(telefono.ToString()),
+
+
+                    };
+                    db.Telefonos_Profesores.Add(T1);
+
+                }
+
+            }
+
+            //Validamos que no vengan correos repetidos
+            string[] correos = p.CorreoEle.Split();
+            bool EstadoRepetidoCorreo = p.Validarepetidos(correos);
+            if (EstadoRepetidoCorreo == true)
+            {
+                return BadRequest("No puede ingresar correos electronicos repetidos");
+            }
+            else
+            {
+                //Si no vienen repetidos recorremos el arreglo de String y agregamos cada uno
+                foreach (string correo in correos)
+                {
+                    Correos_Profesores C1 = new Correos_Profesores()
+                    {
+                        Identificacion_Profesor = p1.Identificacion,
+                        Tipo_ID_Profesor = p1.Tipo_ID,
+                        Corre_Electronico= correo.ToString(),
+                    };
+                    db.Correos_Profesores.Add(C1);
+
+                }
+
+            }
 
             try
             {
                 await db.SaveChangesAsync();
+
             }
             catch (DbUpdateException)
             {
-                if (ProfesoreExists(profesore.Tipo_ID))
+                if (ProfesoreExists(p.tipo_ID) & ProfesoreExists2(p.Identificacion))
                 {
                     return Conflict();
                 }
@@ -98,11 +164,16 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = profesore.Tipo_ID }, profesore);
-        }
+            //  var response = Request.CreateResponse(HttpStatusCode.Created);
+            //Incluir el url del nuevo recurso creado
+            // string uri = Url.Link("InserEstudian", new { id = e2.Identificacion });
+            // response.Headers.Location = new Uri(uri);
 
-        // DELETE: api/Profesores/5
-        [ResponseType(typeof(Profesore))]
+
+
+
+            // DELETE: api/Profesores/5
+            [ResponseType(typeof(Profesore))]
         public async Task<IHttpActionResult> DeleteProfesore(string tipoID, string id)
         {
             Profesore profesore = await db.Profesores.FindAsync(tipoID,id);
@@ -153,9 +224,14 @@ namespace WebProyecto.Controllers
             base.Dispose(disposing);
         }
 
-        private bool ProfesoreExists(string id)
+        private bool ProfesoreExists(string tipoid)
         {
-            return db.Profesores.Count(e => e.Tipo_ID == id) > 0;
+            return db.Profesores.Count(e => e.Tipo_ID == tipoid) > 0;
+        }
+
+        private bool ProfesoreExists2(string id)
+        {
+            return db.Profesores.Count(e => e.Identificacion == id) > 0;
         }
     }
 }
