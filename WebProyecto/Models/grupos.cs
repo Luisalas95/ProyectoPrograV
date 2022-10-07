@@ -30,9 +30,8 @@ namespace WebProyecto.Models
         public byte numerogrupo { get; set; }
 
         [Required]
-        [MaxLength (10)]
-        public string codigoCurso { get; set; }
-
+        [MaxLength(10)]
+        public string Horario { get; set; }
      
 
 

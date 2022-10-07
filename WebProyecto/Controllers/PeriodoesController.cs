@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -88,7 +89,7 @@ namespace WebProyecto.Controllers
 
             //Validamos que solo exista un estado activo en el periodo
 
-            if (EstadoActivoExist(p.estado))
+            if (EstadoActivoExist(p.estado.ToUpper()))
             {
                 return BadRequest("Solo puede existir un periodo activo");
 
@@ -164,7 +165,13 @@ namespace WebProyecto.Controllers
 
         private bool EstadoActivoExist(string estado)
         {
-            return db.Periodoes.Count(e => e.Estado == estado) > 0;
+            if (estado == "A")
+            {
+             return db.Periodoes.Count(e => e.Estado == estado) > 0;
+            }
+
+            return false;
         }
+       
     }
 }

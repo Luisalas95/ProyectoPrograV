@@ -122,10 +122,38 @@ namespace WebProyecto.Controllers
                 return BadRequest("El codigo del curso ingresado no existe");
             }
 
+            /// Validamos que el profesor exista
+            if (!ProfesoreExists(g.tipo_ID) || !ProfesoreExists2(g.Identificacion))
+            {
+                return BadRequest("El profesor no existe");
+            }
 
+            if (!PeriodoExists(g.anno) || !PeriodoExistsNuPeriodo(g.numeroPeriodo))
+            {
+                return BadRequest("El periodo no es valido");
+            }
 
-            
+            var idQuery =
+              from ord1 in db.Periodoes
+              where ord1.Anno == g.anno && ord1.NumeroPeriodo == g.numeroPeriodo
+              select new { ord1.Estado };
 
+            if (EstadoPeriodo(idQuery.ToString()))
+            {
+                return BadRequest("No puede matricular en un periodo pasado");
+            }
+            Grupos G1 = new Grupos()
+            {
+                NumeroPeriodo = g.numeroPeriodo,
+                Numero_Grupo = g.numerogrupo,
+                Codigo_Curs = g.codigocurso,
+                Identificacion_Profesor = g.Identificacion,
+                Horario = g.Horario,
+                Anno = g.anno,
+               Tipo_ID_Profeso = g.tipo_ID
+            };
+
+            db.Grupos.Add(G1);
             try
             {
                 await db.SaveChangesAsync();
@@ -142,7 +170,7 @@ namespace WebProyecto.Controllers
                 }
             }
 
-
+            return Ok(g);
 
         }
 
@@ -218,6 +246,10 @@ namespace WebProyecto.Controllers
             return db.Cursos.Count(e => e.Codigo_Curso == id) > 0;
         }
 
+        private bool ValidaCodigoGrupo(byte id)
+        {
+            return db.Grupos.Count(e => e.Numero_Grupo == id) > 0;
+        }
 
         private bool ProfesoreExists(string tipoid)
         {
@@ -228,6 +260,27 @@ namespace WebProyecto.Controllers
         {
             return db.Profesores.Count(e => e.Identificacion == id) > 0;
         }
+
+        private bool PeriodoExists(int id)
+        {
+            return db.Periodoes.Count(e => e.Anno == id) > 0;
+        }
+
+        private bool PeriodoExistsNuPeriodo(byte id)
+        {
+            return db.Periodoes.Count(e => e.NumeroPeriodo == id) > 0;
+        }
+
+        private bool EstadoPeriodo(string estado)
+        {
+            if (estado == "P")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
 
     }
 }
