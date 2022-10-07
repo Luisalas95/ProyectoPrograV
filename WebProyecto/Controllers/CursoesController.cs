@@ -141,6 +141,32 @@ namespace WebProyecto.Controllers
 
             return Ok(curso);
         }
+        //------------------------- getCursosPorCarrera
+
+        [Route("api/Cursoes/CursosPorCarrera")]
+        [HttpGet]
+        public async Task<IHttpActionResult> getCursosPorCarrera(string CodigoCarrera)
+        {
+            Carrera carrera = await db.Carreras.FindAsync(CodigoCarrera);
+
+            if (carrera == null)
+            {
+                return NotFound();
+            }
+
+            var idQuery =
+           from ord1 in db.Cursos
+           from ord in db.Carreras
+           where CodigoCarrera == ord.Codigo_Carrera && CodigoCarrera == ord1.Codigo_Carrera 
+           select new { ord.Codigo_Carrera,ord.Nombre_Carrera,ord1.Codigo_Curso,ord1.Nombre_Curso};
+
+
+
+            return Ok(idQuery);
+        }
+
+        //------------------------------
+
 
         protected override void Dispose(bool disposing)
         {

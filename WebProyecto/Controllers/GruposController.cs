@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -218,9 +219,160 @@ namespace WebProyecto.Controllers
             return Ok(idQuery);
         }
 
+        //------------------------- GetGruposPorProfesor
 
-       
+        [Route("api/Grupos/GetGruposPorProfesor")]
+        [HttpGet]
+        public async Task<IHttpActionResult> getGruposPorProfesor(string TipoID,String Id)
+        {
+            Profesore prof = await db.Profesores.FindAsync(TipoID,Id);
 
+            if (prof == null)
+            {
+                return NotFound();
+            }
+
+            var idQuery =
+           from ord1 in db.Grupos
+           from ord in db.Profesores
+           from ord2 in db.Cursos
+           where TipoID == ord.Tipo_ID && 
+           Id == ord.Identificacion && TipoID==ord1.Tipo_ID_Profeso && 
+           Id==ord1.Identificacion_Profesor &&ord1.Codigo_Curs==ord2.Codigo_Curso
+           select new { ord1.Numero_Grupo, ord2.Codigo_Curso, ord2.Nombre_Curso,
+               ord1.NumeroPeriodo,ord1.Horario,ord.Nombre,ord.Primer_Apellido,
+               ord.Segundo_apellido,ord.Tipo_ID,ord.Identificacion};
+
+
+            return Ok(idQuery);
+        }
+
+        //------------------------------
+
+        //------------------------- GetGruposPorCarrera
+
+        [Route("api/Grupos/GetGruposPorCarrera")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetGruposPorCarrera(string CodCarrera)
+        {
+            Carrera carrera = await db.Carreras.FindAsync(CodCarrera);
+
+            if (carrera == null)
+            {
+                return NotFound();
+            }
+
+            var idQuery =
+           from ord1 in db.Grupos
+           from ord in db.Carreras
+           from ord2 in db.Cursos
+           from ord3 in db.Profesores
+           where CodCarrera == ord.Codigo_Carrera && CodCarrera ==ord2.Codigo_Carrera &&
+           ord2.Codigo_Curso==ord1.Codigo_Curs
+           select new
+           {
+               ord1.Numero_Grupo,
+               ord2.Codigo_Curso,
+               ord2.Nombre_Curso,
+               ord1.NumeroPeriodo,
+               ord1.Horario,
+               ord3.Nombre,
+               ord3.Primer_Apellido,
+               ord3.Segundo_apellido,
+               ord3.Tipo_ID,
+               ord3.Identificacion
+           };
+
+
+            return Ok(idQuery);
+        }
+
+        //------------------------------
+        //------------------------- GetGruposPorPeriodo
+
+        [Route("api/Grupos/GetGruposPorPeriodo")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetGruposPorPeriodo(int Anno,int Periodo)
+        {
+            Periodo periodo = await db.Periodoes.FindAsync(Anno,Periodo);
+
+            if (periodo == null)
+            {
+                return NotFound();
+            }
+
+            var idQuery =
+           from ord1 in db.Grupos
+           from ord in db.Periodoes
+           from ord2 in db.Cursos
+           from ord3 in db.Profesores
+           where Anno == ord.Anno && Periodo == ord.NumeroPeriodo &&
+           Anno==ord1.Anno && Periodo == ord1.NumeroPeriodo
+           
+           select new
+           {
+               ord1.Numero_Grupo,
+               ord2.Codigo_Curso,
+               ord2.Nombre_Curso,
+               ord1.Horario,
+               ord3.Nombre,
+               ord3.Primer_Apellido,
+               ord3.Segundo_apellido,
+               ord3.Tipo_ID,
+               ord3.Identificacion,
+               ord.Anno,
+               ord1.NumeroPeriodo
+
+           };
+
+
+            return Ok(idQuery);
+        }
+
+        //------------------------------
+
+
+        //------------------------- GetGruposPorCurso
+
+        [Route("api/Grupos/GetGruposPorCurso")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetGruposPorCurso(string CodCurso)
+        {
+            Curso curso = await db.Cursos.FindAsync(CodCurso);
+
+            if (curso == null)
+            {
+                return NotFound();
+            }
+
+            var idQuery =
+           from ord1 in db.Grupos
+           from ord in db.Carreras
+           from ord2 in db.Cursos
+           from ord3 in db.Profesores
+           where CodCurso == ord2.Codigo_Curso  &&
+           CodCurso == ord1.Codigo_Curs
+           select new
+           {
+               ord1.Numero_Grupo,
+               ord2.Codigo_Curso,
+               ord2.Nombre_Curso,
+               ord1.NumeroPeriodo,
+               ord1.Anno,
+               ord1.Horario,
+               ord3.Nombre,
+               ord3.Primer_Apellido,
+               ord3.Segundo_apellido,
+               ord3.Tipo_ID,
+               ord3.Identificacion
+              
+           };
+
+
+            return Ok(idQuery);
+        }
+
+        //------------------------------
 
         protected override void Dispose(bool disposing)
         {
