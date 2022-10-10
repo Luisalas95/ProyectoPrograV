@@ -180,13 +180,23 @@ namespace WebProyecto.Controllers
 
             // DELETE: api/Grupos/5
             [ResponseType(typeof(Grupos))]
-        public async Task<IHttpActionResult> DeleteGrupos(byte id)
+        public async Task<IHttpActionResult> DeleteGrupos(byte numeroGrupo,string CodigoCurso, int periodo, int anno)
         {
-            Grupos grupos = await db.Grupos.FindAsync(id);
+            Grupos grupos = await db.Grupos.FindAsync(numeroGrupo, CodigoCurso);
             if (grupos == null)
             {
                 return NotFound();
             }
+            var idQuery =
+            from ord in db.Grupos
+            where numeroGrupo == ord.Numero_Grupo && CodigoCurso == ord.Codigo_Curs && periodo.Equals(ord.Periodo) && anno == ord.Anno
+            select new {ord.Numero_Grupo,ord.Codigo_Curs,ord.Anno,ord.NumeroPeriodo };
+
+            db.Grupos.Remove(grupos); /* (grupos.Numero_Grupo.Equals(numeroGrupo)||grupos.Codigo_Curs==CodigoCurso||
+                grupos.Anno==anno||grupos.Periodo.Equals(periodo));
+            */
+
+
 
             db.Grupos.Remove(grupos);
             await db.SaveChangesAsync();
