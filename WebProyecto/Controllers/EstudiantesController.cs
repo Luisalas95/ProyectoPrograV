@@ -196,15 +196,21 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Estudiantes/5
         [ResponseType(typeof(Estudiante))]
-        public async Task<IHttpActionResult> DeleteEstudiante(string id, string TipoID)
+        public async Task<IHttpActionResult> DeleteEstudiante(string id, string TipoID, string telefono, string correo)
         {
+            Correos_Estudiantes correos = await db.Correos_Estudiantes.FindAsync(correo,TipoID,id);
             Estudiante estudiante = await db.Estudiantes.FindAsync(TipoID,id);
+            Telefonos_Estudiantes telefonos = await db.Telefonos_Estudiantes.FindAsync(telefono,TipoID,id);
+            
             if (estudiante == null)
             {
                 return NotFound();
             }
 
+            db.Telefonos_Estudiantes.Remove(telefonos);
+            db.Correos_Estudiantes.Remove(correos);
             db.Estudiantes.Remove(estudiante);
+
             await db.SaveChangesAsync();
 
             return Ok(estudiante);

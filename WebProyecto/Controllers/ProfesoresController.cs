@@ -188,15 +188,20 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Profesores/5
         [ResponseType(typeof(Profesore))]
-        public async Task<IHttpActionResult> DeleteProfesore(string tipoID, string id)
+        public async Task<IHttpActionResult> DeleteProfesore(int numero,string correo,string tipoID, string id)
         {
             Profesore profesore = await db.Profesores.FindAsync(tipoID, id);
+            Correos_Profesores correos = await db.Correos_Profesores.FindAsync(correo,tipoID,id);
+            Telefonos_Profesores telefono = await db.Telefonos_Profesores.FindAsync(numero, tipoID,id);
             if (profesore == null)
             {
                 return NotFound();
             }
+           
 
+            db.Correos_Profesores.Remove(correos);
             db.Profesores.Remove(profesore);
+            db.Telefonos_Profesores.Remove(telefono);
             await db.SaveChangesAsync();
 
             return Ok(profesore);
