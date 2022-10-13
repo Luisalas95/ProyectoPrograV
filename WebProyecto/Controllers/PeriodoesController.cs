@@ -107,6 +107,7 @@ namespace WebProyecto.Controllers
             try
             {
                 await db.SaveChangesAsync();
+                return CreatedAtRoute("DefaultApi", new { Controller = "Periodoes", id = P1.Anno, P1.NumeroPeriodo }, P1);
             }
             catch (DbUpdateException)
             {
@@ -120,7 +121,7 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return Ok(P1);
+           
 
 
         }

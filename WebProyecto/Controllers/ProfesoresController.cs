@@ -163,7 +163,7 @@ namespace WebProyecto.Controllers
                     throw;
                 }
             }
-            return Ok(p1);
+            return CreatedAtRoute("DefaultApi", new { Controller = "Profesores", id = p1.Identificacion, p1.Tipo_ID }, p1);
         }
 
             //  var response = Request.CreateResponse(HttpStatusCode.Created);

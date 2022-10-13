@@ -105,6 +105,7 @@ namespace WebProyecto.Controllers
             try
             {
                 await db.SaveChangesAsync();
+                return CreatedAtRoute("DefaultApi", new { Controller = "Cursoes", id = C1.Codigo_Curso }, C1);
             }
             //validar que el curso no este repetido
             catch (DbUpdateException)
@@ -119,7 +120,7 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return Ok(C1);
+         
 
         }
 

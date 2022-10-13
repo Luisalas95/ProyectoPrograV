@@ -16,6 +16,8 @@ namespace WebProyecto
     {
         void Application_Start(object sender, EventArgs e)
         {
+
+           // GlobalConfiguration.Configuration.Formatters.Remove(GlobalConfiguration.Configuration.Formatters.XmlFormatter);
             // Código que se ejecuta al iniciar la aplicación
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);

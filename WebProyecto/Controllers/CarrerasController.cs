@@ -96,6 +96,7 @@ namespace WebProyecto.Controllers
             try
             {
                 await db.SaveChangesAsync();
+                return CreatedAtRoute("DefaultApi", new { Controller = "Carreras", id = c1.Codigo_Carrera}, c1);
             }
             catch (DbUpdateException)
             {
@@ -109,7 +110,7 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return Ok(c);
+  
 
         }
 

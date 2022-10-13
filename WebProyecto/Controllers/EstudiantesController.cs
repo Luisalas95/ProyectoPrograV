@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -79,6 +80,7 @@ namespace WebProyecto.Controllers
                 }
             }
 
+
             return Ok(e2);
         }
 
@@ -113,7 +115,11 @@ namespace WebProyecto.Controllers
            bool estadoRepetidosTele = e.Validarepetidos(telefonos);
             if (estadoRepetidosTele == true)
             {
-                return BadRequest ("No puede ingresar numeros de telefono repetidos");
+
+             
+                return BadRequest("No puede ingresar numeros de telefono repetidos");
+
+           
             }
             else
             {
@@ -160,7 +166,9 @@ namespace WebProyecto.Controllers
             try
             {
                 await db.SaveChangesAsync();
+                return CreatedAtRoute("DefaultApi", new { Controller = "Estudiantes", id = e2.Tipo_ID, e2.Identificacion }, e2);
 
+        
             }
             catch (DbUpdateException)
             {
@@ -179,10 +187,7 @@ namespace WebProyecto.Controllers
            // string uri = Url.Link("InserEstudian", new { id = e2.Identificacion });
            // response.Headers.Location = new Uri(uri);
 
-           
-            return Ok(e2);
         }
-
 
 
 
@@ -232,11 +237,15 @@ namespace WebProyecto.Controllers
             return Ok(idQuery);
         }
 
+      
+
+
+
         //------------------------------
 
 
 
-      
+
 
         //------------------------- 
 
