@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -117,10 +118,14 @@ namespace WebProyecto.Controllers
                 return BadRequest(ModelState);
             }
 
+     
+
             //Validamos que los campos foranenos en la tabla existan
+
+            //Validar que el curso exista
             if (!CursoExists(g.codigocurso))
             {
-                return BadRequest("El codigo del curso ingresado no existe");
+                return NotFound();
             }
 
             /// Validamos que el profesor exista
@@ -129,20 +134,20 @@ namespace WebProyecto.Controllers
                 return BadRequest("El profesor no existe");
             }
 
+            //Validar que el periodo exista
             if (!PeriodoExists(g.anno) || !PeriodoExistsNuPeriodo(g.numeroPeriodo))
             {
-                return BadRequest("El periodo no es valido");
+                return BadRequest("El periodo no existe");
             }
+            //Validar que el periodo sea activo o futuro
 
-            var idQuery =
-              from ord1 in db.Periodoes
-              where ord1.Anno == g.anno && ord1.NumeroPeriodo == g.numeroPeriodo
-              select new { ord1.Estado };
+            string Estadoperiodo = ConsultaEstadoPeriodo(g.anno, g.numeroPeriodo);
 
-            if (EstadoPeriodo(idQuery.ToString()))
+            if (Estadoperiodo.Contains('P'))
             {
-                return BadRequest("No puede matricular en un periodo pasado");
+                return BadRequest("El periodo no puede ser un periodo pasado");
             }
+
             Grupos G1 = new Grupos()
             {
                 NumeroPeriodo = g.numeroPeriodo,
@@ -158,6 +163,7 @@ namespace WebProyecto.Controllers
             try
             {
                 await db.SaveChangesAsync();
+                return CreatedAtRoute("DefaultApi", new { Controller = "Grupos"}, g);
             }
             catch (DbUpdateException)
             {
@@ -171,7 +177,7 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return Ok(g);
+          
 
         }
 
@@ -408,10 +414,7 @@ namespace WebProyecto.Controllers
             return db.Cursos.Count(e => e.Codigo_Curso == id) > 0;
         }
 
-        private bool ValidaCodigoGrupo(byte id)
-        {
-            return db.Grupos.Count(e => e.Numero_Grupo == id) > 0;
-        }
+       
 
         private bool ProfesoreExists(string tipoid)
         {
@@ -433,15 +436,21 @@ namespace WebProyecto.Controllers
             return db.Periodoes.Count(e => e.NumeroPeriodo == id) > 0;
         }
 
-        private bool EstadoPeriodo(string estado)
-        {
-            if (estado == "P")
+        private string ConsultaEstadoPeriodo(int anno, byte numeroperiodo) {
+            var estado =
+             (from ord1 in db.Periodoes
+              where ord1.Anno == anno && ord1.NumeroPeriodo == numeroperiodo
+              select ord1.Estado);
+            string estad = "";
+            foreach (var item in estado)
             {
-                return true;
+                estad = string.Concat(item);
+
             }
 
-            return false;
+            return estad;
         }
+
 
 
     }

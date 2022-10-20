@@ -7,13 +7,13 @@
     <Schema Namespace="Model_Proyecto.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Asistencia">
           <Key>
-            <PropertyRef Name="Codigo_Grupo" />
+            <PropertyRef Name="Numero_Grupo" />
             <PropertyRef Name="Codigo_Curso" />
             <PropertyRef Name="Fecha_Asistencia" />
             <PropertyRef Name="Tipo_ID_Esutiante" />
             <PropertyRef Name="Identificacion_Estudiante" />
           </Key>
-          <Property Name="Codigo_Grupo" Type="tinyint" Nullable="false" />
+          <Property Name="Numero_Grupo" Type="tinyint" Nullable="false" />
           <Property Name="Codigo_Curso" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Fecha_Asistencia" Type="date" Nullable="false" />
           <Property Name="Tipo_Registro" Type="varchar" MaxLength="15" Nullable="false" />
@@ -288,6 +288,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="InsertarEstudiante" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="AdminProyecto1P5">
+          <Parameter Name="Tipoid" Type="varchar" Mode="In" />
+          <Parameter Name="id" Type="varchar" Mode="In" />
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="PrimerApellido" Type="varchar" Mode="In" />
+          <Parameter Name="SegundoApellido" Type="varchar" Mode="In" />
+          <Parameter Name="FechaNacimiento" Type="date" Mode="In" />
+          <Parameter Name="Codigo" Type="int" Mode="InOut" />
+        </Function>
         <EntityContainer Name="Model_ProyectoStoreContainer">
           <EntitySet Name="Asistencia" EntityType="Self.Asistencia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Carreras" EntityType="Self.Carreras" Schema="dbo" store:Type="Tables" />
@@ -352,19 +361,19 @@
       <Schema Namespace="Model_Proyecto" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Asistencia">
           <Key>
-            <PropertyRef Name="Codigo_Grupo" />
             <PropertyRef Name="Codigo_Curso" />
             <PropertyRef Name="Fecha_Asistencia" />
             <PropertyRef Name="Tipo_ID_Esutiante" />
             <PropertyRef Name="Identificacion_Estudiante" />
+            <PropertyRef Name="Numero_Grupo" />
           </Key>
-          <Property Name="Codigo_Grupo" Type="Byte" Nullable="false" />
           <Property Name="Codigo_Curso" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Fecha_Asistencia" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Tipo_Registro" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Tipo_ID_Esutiante" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Identificacion_Estudiante" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Matricula" Relationship="Self.FK_Asistencia_Matricula1" FromRole="Asistencia" ToRole="Matricula" />
+          <Property Name="Numero_Grupo" Type="Byte" Nullable="false" />
         </EntityType>
         <EntityType Name="Carrera">
           <Key>
@@ -712,6 +721,15 @@
             <End Role="Profesores" EntitySet="Profesores" />
             <End Role="Telefonos_Profesores" EntitySet="Telefonos_Profesores" />
           </AssociationSet>
+          <FunctionImport Name="InsertarEstudiante">
+            <Parameter Name="Tipoid" Mode="In" Type="String" />
+            <Parameter Name="id" Mode="In" Type="String" />
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="PrimerApellido" Mode="In" Type="String" />
+            <Parameter Name="SegundoApellido" Mode="In" Type="String" />
+            <Parameter Name="FechaNacimiento" Mode="In" Type="DateTime" />
+            <Parameter Name="Codigo" Mode="InOut" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -722,7 +740,7 @@
           <EntitySetMapping Name="Asistencias">
             <EntityTypeMapping TypeName="Model_Proyecto.Asistencia">
               <MappingFragment StoreEntitySet="Asistencia">
-                <ScalarProperty Name="Codigo_Grupo" ColumnName="Codigo_Grupo" />
+                <ScalarProperty Name="Numero_Grupo" ColumnName="Numero_Grupo" />
                 <ScalarProperty Name="Codigo_Curso" ColumnName="Codigo_Curso" />
                 <ScalarProperty Name="Fecha_Asistencia" ColumnName="Fecha_Asistencia" />
                 <ScalarProperty Name="Tipo_Registro" ColumnName="Tipo_Registro" />
@@ -844,6 +862,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="InsertarEstudiante" FunctionName="Model_Proyecto.Store.InsertarEstudiante" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

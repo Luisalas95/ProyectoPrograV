@@ -45,7 +45,7 @@ namespace WebProyecto.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != asistencia.Codigo_Grupo)
+            if (id != asistencia.Numero_Grupo)
             {
                 return BadRequest();
             }
@@ -88,7 +88,7 @@ namespace WebProyecto.Controllers
             }
             catch (DbUpdateException)
             {
-                if (AsistenciaExists(asistencia.Codigo_Grupo))
+                if (AsistenciaExists(asistencia.Numero_Grupo))
                 {
                     return Conflict();
                 }
@@ -98,7 +98,7 @@ namespace WebProyecto.Controllers
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = asistencia.Codigo_Grupo }, asistencia);
+            return CreatedAtRoute("DefaultApi", new { id = asistencia.Numero_Grupo }, asistencia);
         }
 
         // DELETE: api/Asistencias/5
@@ -137,7 +137,7 @@ namespace WebProyecto.Controllers
            from ord in db.Asistencias
            
            where TipoID== ord.Tipo_ID_Esutiante &&id == ord1.Identificacion && ord.Identificacion_Estudiante == ord1.Identificacion && ord.Tipo_ID_Esutiante == ord1.Tipo_ID
-           select new { ord.Tipo_ID_Esutiante, ord.Identificacion_Estudiante, ord1.Nombre, ord1.Primer_Apellido, ord1.Segundo_apellido, ord.Codigo_Curso,ord.Codigo_Grupo,ord.Fecha_Asistencia,ord.Tipo_Registro };
+           select new { ord.Tipo_ID_Esutiante, ord.Identificacion_Estudiante, ord1.Nombre, ord1.Primer_Apellido, ord1.Segundo_apellido, ord.Codigo_Curso,ord.Numero_Grupo,ord.Fecha_Asistencia,ord.Tipo_Registro };
 
 
 
@@ -158,7 +158,7 @@ namespace WebProyecto.Controllers
 
         private bool AsistenciaExists(byte id)
         {
-            return db.Asistencias.Count(e => e.Codigo_Grupo == id) > 0;
+            return db.Asistencias.Count(e => e.Numero_Grupo == id) > 0;
         }
     }
 }
