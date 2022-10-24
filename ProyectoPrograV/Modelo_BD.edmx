@@ -136,22 +136,6 @@
           <Property Name="Tipo_ID_Profesor" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="Identificacion_Profesor" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Asistencia_Matricula1">
-          <End Role="Matricula" Type="Self.Matricula" Multiplicity="1" />
-          <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Matricula">
-              <PropertyRef Name="Tipo_ID_Estudiante" />
-              <PropertyRef Name="Identificacion_Estudiante" />
-              <PropertyRef Name="Codigo_Curso" />
-            </Principal>
-            <Dependent Role="Asistencia">
-              <PropertyRef Name="Tipo_ID_Esutiante" />
-              <PropertyRef Name="Identificacion_Estudiante" />
-              <PropertyRef Name="Codigo_Curso" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Correos_Estudiantes_Estudiantes">
           <End Role="Estudiantes" Type="Self.Estudiantes" Multiplicity="1" />
           <End Role="Correos_Estudiantes" Type="Self.Correos_Estudiantes" Multiplicity="*" />
@@ -232,34 +216,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Matricula_Estudiantes">
-          <End Role="Estudiantes" Type="Self.Estudiantes" Multiplicity="1" />
-          <End Role="Matricula" Type="Self.Matricula" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Estudiantes">
-              <PropertyRef Name="Tipo_ID" />
-              <PropertyRef Name="Identificacion" />
-            </Principal>
-            <Dependent Role="Matricula">
-              <PropertyRef Name="Tipo_ID_Estudiante" />
-              <PropertyRef Name="Identificacion_Estudiante" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Matricula_Grupos1">
-          <End Role="Grupos" Type="Self.Grupos" Multiplicity="1" />
-          <End Role="Matricula" Type="Self.Matricula" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Grupos">
-              <PropertyRef Name="Numero_Grupo" />
-              <PropertyRef Name="Codigo_Curs" />
-            </Principal>
-            <Dependent Role="Matricula">
-              <PropertyRef Name="Numero_Grupo" />
-              <PropertyRef Name="Codigo_Curso" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Telefonos_Estudiantes_Estudiantes">
           <End Role="Estudiantes" Type="Self.Estudiantes" Multiplicity="1" />
           <End Role="Telefonos_Estudiantes" Type="Self.Telefonos_Estudiantes" Multiplicity="*" />
@@ -310,10 +266,6 @@
           <EntitySet Name="Profesores" EntityType="Self.Profesores" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Telefonos_Estudiantes" EntityType="Self.Telefonos_Estudiantes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Telefonos_Profesores" EntityType="Self.Telefonos_Profesores" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Asistencia_Matricula1" Association="Self.FK_Asistencia_Matricula1">
-            <End Role="Matricula" EntitySet="Matricula" />
-            <End Role="Asistencia" EntitySet="Asistencia" />
-          </AssociationSet>
           <AssociationSet Name="FK_Correos_Estudiantes_Estudiantes" Association="Self.FK_Correos_Estudiantes_Estudiantes">
             <End Role="Estudiantes" EntitySet="Estudiantes" />
             <End Role="Correos_Estudiantes" EntitySet="Correos_Estudiantes" />
@@ -337,14 +289,6 @@
           <AssociationSet Name="FK_Grupos_Profesores1" Association="Self.FK_Grupos_Profesores1">
             <End Role="Profesores" EntitySet="Profesores" />
             <End Role="Grupos" EntitySet="Grupos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Matricula_Estudiantes" Association="Self.FK_Matricula_Estudiantes">
-            <End Role="Estudiantes" EntitySet="Estudiantes" />
-            <End Role="Matricula" EntitySet="Matricula" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Matricula_Grupos1" Association="Self.FK_Matricula_Grupos1">
-            <End Role="Grupos" EntitySet="Grupos" />
-            <End Role="Matricula" EntitySet="Matricula" />
           </AssociationSet>
           <AssociationSet Name="FK_Telefonos_Estudiantes_Estudiantes" Association="Self.FK_Telefonos_Estudiantes_Estudiantes">
             <End Role="Estudiantes" EntitySet="Estudiantes" />

@@ -23,17 +23,45 @@ namespace WebProyecto.Controllers
             return db.Asistencias;
         }
 
-        // GET: api/Asistencias/5
+        
+
         [ResponseType(typeof(Asistencia))]
-        public async Task<IHttpActionResult> GetAsistencia(byte CodigoGrupo, string CodCurso, DateTime fecha, string tipoID,string ID)
-        {
-            Asistencia asistencia = await db.Asistencias.FindAsync(CodigoGrupo, CodCurso,fecha,tipoID,ID);
-            if (asistencia == null)
+        [Route("api/Asistencia/AsistenciaPorGrupo", Name = "getAsistenciaPorGrupo")]
+
+        public HttpResponseMessage getAsistencia(int NumeroGrupo, string CodigoCurso, DateTime Fecha)
+        {   //obtiene tipoID segun apellidos Profesor
+            try
             {
-                return NotFound();
+
+                var idQuery = (from p in db.Asistencias
+                               where p.Numero_Grupo == NumeroGrupo && p.Codigo_Curso == CodigoCurso && p.Fecha_Asistencia==Fecha
+
+                               select new
+                               {
+                                   p.Numero_Grupo,
+                                   p.Codigo_Curso,
+                                   p.Fecha_Asistencia,
+                                   p.Tipo_Registro,
+                                   p.Tipo_ID_Esutiante,
+                                   p.Identificacion_Estudiante
+                               }
+                               ).ToList();
+                Asistencia asistencia = db.Asistencias.Where(x => x.Numero_Grupo == NumeroGrupo && x.Codigo_Curso == CodigoCurso && x.Fecha_Asistencia==Fecha).SingleOrDefault();
+
+                if (asistencia != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, idQuery);
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Asistencia no ha sido encontrado");
+
+            }
+            catch (Exception ex)
+            {
+
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
 
-            return Ok(asistencia);
+
         }
 
         // PUT: api/Asistencias/5
