@@ -236,88 +236,87 @@ namespace WebProyecto.Controllers
         //--------------------------------
 
 
-        [Route("api/Profesores/DatosProfesoresPorApellidos")]
-        [HttpGet]
-        public async Task<IHttpActionResult> getDatosProfesoresPorApellidos(string Apellido1, string Apellido2)
-        {   //obtiene tipoID segun apellidos Profesor
-            var idQuery1=
-            from ordP in db.Profesores
-            where Apellido1 ==ordP.Primer_Apellido && Apellido2==ordP.Segundo_apellido
-            select new { ordP.Tipo_ID };
-            string tipoID =idQuery1.ToString();
-
-            //obtiene ID segun Apellidos  Profesor
-            var idQuery2 =
-            from ordP1 in db.Profesores
-            where  Apellido1 == ordP1.Primer_Apellido && Apellido2 == ordP1.Segundo_apellido
-            select new { ordP1.Identificacion };
-            string ID=idQuery2.ToString() ;
-
-            Profesore Profesor = await db.Profesores.FindAsync(tipoID, ID);
-
-            if (Profesor == null)
-            {
-                return NotFound();
-            }
-
-            var idQuery =
-           from ord1 in db.Profesores
-           from ord in db.Telefonos_Profesores
-           from ord2 in db.Correos_Profesores
-           where  Apellido1 == ord1.Primer_Apellido && 
-           Apellido2==ord1.Segundo_apellido  &&ord1.Tipo_ID==ord.Tipo_ID_Profesor && ord1.Identificacion==ord.Identificacion_Profesor
-           select new { ord.Tipo_ID_Profesor, ord.Identificacion_Profesor, ord1.Nombre, ord1.Primer_Apellido, ord1.Segundo_apellido, ord.Numero_Telefono, ord1.Fecha_Nacimiento, ord2.Corre_Electronico };
-
-
-
-            return Ok(idQuery);
-        }
-
+    
 
         //--------------
+
+ 
+               [ResponseType(typeof(Profesore))]
+        [Route("api/Profesores/DatosProfesoresPorApellidos", Name ="getProfesoresPorApellidos")]
+
+        public HttpResponseMessage getDatosProfesoresPorApellidos(string Apellido1,string Apellido2)
+        {   //obtiene tipoID segun apellidos Profesor
+            try {
+
+                var idQuery = (from p in db.Profesores
+                               where p.Primer_Apellido == Apellido1 && p.Segundo_apellido == Apellido2
+
+                               select new
+                               {
+                                   p.Identificacion, p.Tipo_ID,p.Nombre,p.Primer_Apellido,p.Segundo_apellido,
+                                   p.Fecha_Nacimiento ,p.Correos_Profesores,p.Telefonos_Profesores
+                               }
+                               ).ToList();
+                Profesore profesor = db.Profesores.Where(x => x.Primer_Apellido == Apellido1 && x.Segundo_apellido == Apellido2).SingleOrDefault();
+
+                if ( profesor != null) {
+                    return Request.CreateResponse(HttpStatusCode.OK, idQuery);
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Profesor "+Apellido1+" "+Apellido2+" no ha sido encontrado");
+
+            } catch (Exception ex) {
+
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+
+
+        }
+
 
 
 
         //--------------------------------
 
 
-        [Route("api/Profesores/DatosProfesoresPorNombre")]
-        [HttpGet]
-        public async Task<IHttpActionResult> DatosProfesoresPorNombre(string Nombre)
-        {   //obtiene tipoID segun Nombre  Profesor
-            var idQuery1 =
-            from ordP in db.Profesores
-            where Nombre == ordP.Primer_Apellido
-            select new { ordP.Tipo_ID };
-            string tipoID = idQuery1.ToString();
+        [ResponseType(typeof(Profesore))]
+        [Route("api/Profesores/DatosProfesoresPorNombre", Name = "getProfesoresPorNombre")]
 
-            //obtiene ID segun Nombre  Profesor
-            var idQuery2 =
-            from ordP1 in db.Profesores
-            where Nombre == ordP1.Nombre
-            select new { ordP1.Identificacion };
-            string ID = idQuery2.ToString();
-
-            Profesore Profesor = await db.Profesores.FindAsync(tipoID, ID);
-
-            if (Profesor != null)
+        public HttpResponseMessage getDatosProfesoresPorNombre(string Nombre)
+        {   //obtiene tipoID segun apellidos Profesor
+            try
             {
 
-            
+                var idQuery = (from p in db.Profesores
+                               where p.Nombre == Nombre 
 
-            var idQuery =
-           from ord1 in db.Profesores
-           from ord in db.Telefonos_Profesores
-           from ord2 in db.Correos_Profesores
-           where Nombre == ord1.Primer_Apellido &&
-           ord1.Tipo_ID == ord.Tipo_ID_Profesor && ord1.Identificacion == ord.Identificacion_Profesor
-           select new { ord.Tipo_ID_Profesor, ord.Identificacion_Profesor, ord1.Nombre, ord1.Primer_Apellido, ord1.Segundo_apellido, ord.Numero_Telefono, ord1.Fecha_Nacimiento, ord2.Corre_Electronico };
+                               select new
+                               {
+                                   p.Identificacion,
+                                   p.Tipo_ID,
+                                   p.Nombre,
+                                   p.Primer_Apellido,
+                                   p.Segundo_apellido,
+                                   p.Fecha_Nacimiento,
+                                   p.Correos_Profesores,
+                                   p.Telefonos_Profesores
+                               }
+                               ).ToList();
+                Profesore profesor = db.Profesores.Where(x => x.Nombre == Nombre).SingleOrDefault();
 
+                if (profesor != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, idQuery);
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Profesor " + Nombre + " no ha sido encontrado");
 
-
-            return Ok(idQuery); 
             }
-        return NotFound();
+            catch (Exception ex)
+            {
+
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+
+
         }
 
 
