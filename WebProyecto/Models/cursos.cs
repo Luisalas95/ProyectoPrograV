@@ -21,6 +21,5 @@ namespace WebProyecto.Models
         [MaxLength(30)]
         public string nombrecurso { get; set; }
 
-
     }
 }

@@ -138,12 +138,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\asistencia.cs" />
+    <Compile Include="Models\carreraActualiza.cs" />
     <Compile Include="Models\carreras.cs" />
+    <Compile Include="Models\cursoactualiza.cs" />
     <Compile Include="Models\cursos.cs" />
     <Compile Include="Models\DatosAsistencia.cs" />
     <Compile Include="Models\estudiante.cs" />
     <Compile Include="Models\estudianteActualiza.cs" />
     <Compile Include="Models\grupos.cs" />
+    <Compile Include="Models\gruposActualiza.cs" />
     <Compile Include="Models\matricula.cs" />
     <Compile Include="Models\periodos.cs" />
     <Compile Include="Models\profesor.cs" />

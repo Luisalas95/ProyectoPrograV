@@ -39,19 +39,30 @@ namespace WebProyecto.Controllers
 
         // PUT: api/Profesores/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutProfesore(string id, Profesore profesore)
+        public async Task<IHttpActionResult> PutProfesore(string id, string tipoid, estudianteActualiza p)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != profesore.Tipo_ID)
+            if (!ProfesoreExists(tipoid) || !ProfesoreExists2(id))
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(profesore).State = EntityState.Modified;
+            Profesore p2 = new Profesore()
+            {
+                Nombre = p.Nombre,
+                Primer_Apellido = p.primerApellido,
+                Segundo_apellido = p.SegundoApellido,
+                Fecha_Nacimiento = p.FechaNacimiento,
+                Identificacion = id,
+                Tipo_ID = tipoid,
+            };
+
+
+            db.Entry(p2).State = EntityState.Modified;
 
             try
             {
@@ -59,17 +70,11 @@ namespace WebProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProfesoreExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(p2);
         }
 
         [HttpPost]

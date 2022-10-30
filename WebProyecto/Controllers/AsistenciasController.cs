@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ProyectoPrograV;
+using WebProyecto.Models;
 
 namespace WebProyecto.Controllers
 {
@@ -145,6 +146,76 @@ namespace WebProyecto.Controllers
             return Ok(asistencia);
         }
 
+        [HttpPost]
+        [Route("api/Asistencias/CrearAsistencia")]
+        [ResponseType(typeof(asistencia))]
+        public async Task<IHttpActionResult> CrearAsistencia
+ ([FromBody] asistencia a)
+
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            //Validar campos foraneos
+
+            // valida que el estudiante exista
+            if (!EstudianteExists(a.tipo_ID) || !EstudianteExists2(a.Identificacion))
+            {
+                return NotFound();
+            }
+
+
+            //Validar que el grupo y curso exista
+            if (!GruposExists(a.numerogrupo) || !GruposExistsCodigoCurso(a.codigocurso))
+            {
+                return NotFound();
+            }
+
+            //Validar que el estudiante este matriculado
+            bool bandera = ConsultaMatricula(a.Identificacion, a.tipo_ID, a.codigocurso);
+            if (bandera == false)
+            {
+                return BadRequest("El estudiante no esta matriculado en el curso");
+            }
+
+            Asistencia A1 = new Asistencia()
+            {
+                Codigo_Curso = a.codigocurso,
+                Numero_Grupo = a.numerogrupo,
+                Fecha_Asistencia = a.fechaAsistencia,
+                Tipo_Registro = a.tipoasistencia,
+                Identificacion_Estudiante = a.Identificacion,
+                Tipo_ID_Esutiante = a.tipo_ID
+            };
+            db.Asistencias.Add(A1);
+
+            try
+            {
+                await db.SaveChangesAsync();
+                return CreatedAtRoute("DefaultApi", new { Controller = "Asistencia" }, a);
+            }
+            catch (DbUpdateException)
+            {
+                if (AsistenciaExists(a.numerogrupo) & AsistenciaExistsCurso(a.codigocurso)
+                   & AsistenciaExistsFecha(a.fechaAsistencia) & AsistenciaExistEstudiante(a.tipo_ID)
+                   & AsistenciaExistEstudianteID(a.Identificacion))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
+
+        }
+
+
+
 
         //--------------------------------DatosASistencia
 
@@ -187,6 +258,65 @@ namespace WebProyecto.Controllers
         private bool AsistenciaExists(byte id)
         {
             return db.Asistencias.Count(e => e.Numero_Grupo == id) > 0;
+        }
+
+        private bool AsistenciaExistsCurso(string id)
+        {
+            return db.Asistencias.Count(e => e.Codigo_Curso == id) > 0;
+        }
+
+        private bool AsistenciaExistsFecha(DateTime fecha)
+        {
+            return db.Asistencias.Count(e => e.Fecha_Asistencia == fecha) > 0;
+        }
+
+        private bool AsistenciaExistEstudiante(string TipoId)
+        {
+            return db.Asistencias.Count(e => e.Tipo_ID_Esutiante == TipoId) > 0;
+        }
+        private bool AsistenciaExistEstudianteID(string Id)
+        {
+            return db.Asistencias.Count(e => e.Identificacion_Estudiante == Id) > 0;
+        }
+
+
+
+
+        private bool EstudianteExists(string tipoid)
+        {
+
+            return db.Estudiantes.Count(e => e.Tipo_ID == tipoid) > 0;
+        }
+
+        private bool EstudianteExists2(string identificacion)
+        {
+            return db.Estudiantes.Count(e => e.Identificacion == identificacion) > 0;
+        }
+
+        private bool GruposExists(byte id)
+        {
+            return db.Grupos.Count(e => e.Numero_Grupo == id) > 0;
+        }
+
+        private bool GruposExistsCodigoCurso(string id)
+        {
+            return db.Grupos.Count(e => e.Codigo_Curs == id) > 0;
+        }
+
+        private bool ConsultaMatricula(string identificacion, string tipoid, string codigocurso)
+        {
+
+            if (db.Matriculas.Count(e => e.Tipo_ID_Estudiante == tipoid) > 0
+                & db.Matriculas.Count(e => e.Identificacion_Estudiante == identificacion) > 0
+                & db.Matriculas.Count(e => e.Codigo_Curso == codigocurso) > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
     }
 }

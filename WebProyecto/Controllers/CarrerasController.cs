@@ -39,19 +39,27 @@ namespace WebProyecto.Controllers
 
         // PUT: api/Carreras/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutCarrera(string id, Carrera carrera)
+        public async Task<IHttpActionResult> PutCarrera(string CodigoCarrera, carreraActualiza c)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != carrera.Codigo_Carrera)
+            if (!CarreraExists(CodigoCarrera))
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(carrera).State = EntityState.Modified;
+            Carrera C1 = new Carrera
+            {
+                Codigo_Carrera = CodigoCarrera,
+                Nombre_Carrera = c.nombreCarrera
+            };
+
+
+
+            db.Entry(C1).State = EntityState.Modified;
 
             try
             {
@@ -59,17 +67,11 @@ namespace WebProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CarreraExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
+              
                     throw;
-                }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(C1);
         }
 
         [HttpPost]

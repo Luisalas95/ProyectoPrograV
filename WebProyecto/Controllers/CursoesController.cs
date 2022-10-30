@@ -39,19 +39,33 @@ namespace WebProyecto.Controllers
 
         // PUT: api/Cursoes/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutCurso(string id, Curso curso)
+        public async Task<IHttpActionResult> PutCurso(string codigocurso, cursoactualiza c)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != curso.Codigo_Curso)
+            if (!CursoExists(codigocurso))
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(curso).State = EntityState.Modified;
+            if (!CarreraExists(c.codigocarrera))
+            {
+                return NotFound();
+            }
+
+            Curso C1 = new Curso
+            {
+                Codigo_Curso = codigocurso,
+                Nombre_Curso = c.nombrecurso,
+                Codigo_Carrera = c.codigocarrera
+
+            };
+
+
+            db.Entry(C1).State = EntityState.Modified;
 
             try
             {
@@ -59,17 +73,12 @@ namespace WebProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CursoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
+             
                     throw;
-                }
+                
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(C1);
         }
 
    

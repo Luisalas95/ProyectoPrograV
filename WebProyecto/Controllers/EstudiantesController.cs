@@ -51,6 +51,12 @@ namespace WebProyecto.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            if (!EstudianteExists(tipoId) || !EstudianteExists2(id))
+            {
+                return NotFound();
+            }
+
             Estudiante e2 = new Estudiante()
             {
                 Nombre = e.Nombre,
@@ -70,14 +76,8 @@ namespace WebProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EstudianteExists(tipoId) & !EstudianteExists2(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
 
