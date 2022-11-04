@@ -195,26 +195,76 @@ namespace WebProyecto.Controllers
 
 
         // DELETE: api/Estudiantes/5
-        [ResponseType(typeof(Estudiante))]
-        public async Task<IHttpActionResult> DeleteEstudiante(string id, string TipoID, string telefono, string correo)
+        [ResponseType(typeof(EstudianteSimple))]
+        public async Task<IHttpActionResult> DeleteEstudiante(string id, string TipoID)
         {
-            Correos_Estudiantes correos = await db.Correos_Estudiantes.FindAsync(correo,TipoID,id);
+        
             Estudiante estudiante = await db.Estudiantes.FindAsync(TipoID,id);
-            Telefonos_Estudiantes telefonos = await db.Telefonos_Estudiantes.FindAsync(telefono,TipoID,id);
+        
             
             if (estudiante == null)
             {
                 return NotFound();
             }
+            var Correo =
+              from correo in db.Correos_Estudiantes
+              where correo.Tipo_ID_Estudiante == TipoID && correo.Identificacion_Estudiante == id
+              select correo.Corre_Electronico;
+            var deleteCorreo =
+              from correo in db.Correos_Estudiantes
+              where correo.Tipo_ID_Estudiante == TipoID && correo.Identificacion_Estudiante == id
+              select correo;
 
-            db.Telefonos_Estudiantes.Remove(telefonos);
-            db.Correos_Estudiantes.Remove(correos);
+            Correos_Estudiantes correos = await db.Correos_Estudiantes.FindAsync(Correo.ToString(), TipoID, id);
+
+            foreach (var details in deleteCorreo)
+            {
+                
+                db.Correos_Estudiantes.Remove(details);
+            }
+            try
+            {
+                db.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // Provide for exceptions.
+            }
+
+            var Tele =
+              from telefono in db.Telefonos_Estudiantes
+              where telefono.Tipo_ID_Estudiante == TipoID && telefono.Identificacion_Estudiante == id
+              select telefono.Numero_Telefono;
+            var deleteTele=
+                from telefono in db.Telefonos_Estudiantes
+                where telefono.Tipo_ID_Estudiante== TipoID && telefono.Identificacion_Estudiante==id
+                select telefono;
+
+            Telefonos_Estudiantes telefonos = await db.Telefonos_Estudiantes.FindAsync(Tele.ToString(), TipoID, id);
+
+            foreach (var detail in deleteTele)
+               {  
+                  
+                   db.Telefonos_Estudiantes.Remove(detail);
+              
+            }
+               try
+               {
+                   db.SaveChangesAsync();
+               }
+               catch (Exception e)
+               {
+                   Console.WriteLine(e);
+                   // Provide for exceptions.
+               }
             db.Estudiantes.Remove(estudiante);
 
             await db.SaveChangesAsync();
 
             return Ok(estudiante);
         }
+
 
 
 

@@ -145,6 +145,7 @@
     <Compile Include="Models\DatosAsistencia.cs" />
     <Compile Include="Models\estudiante.cs" />
     <Compile Include="Models\estudianteActualiza.cs" />
+    <Compile Include="Models\EstudianteSimple.cs" />
     <Compile Include="Models\grupos.cs" />
     <Compile Include="Models\gruposActualiza.cs" />
     <Compile Include="Models\matricula.cs" />
@@ -165,6 +166,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\AsistenciaEstudiante\" />
+    <Folder Include="Views\EstudianteSimple\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProyectoPrograV\ProyectoPrograV.csproj">

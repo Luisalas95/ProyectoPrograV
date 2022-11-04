@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.WebPages;
 using ProyectoPrograV;
 using WebProyecto.Models;
 
@@ -193,20 +194,74 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Profesores/5
         [ResponseType(typeof(Profesore))]
-        public async Task<IHttpActionResult> DeleteProfesore(int numero,string correo,string tipoID, string id)
+        public async Task<IHttpActionResult> DeleteProfesore(string TipoID, string id)
         {
-            Profesore profesore = await db.Profesores.FindAsync(tipoID, id);
-            Correos_Profesores correos = await db.Correos_Profesores.FindAsync(correo,tipoID,id);
-            Telefonos_Profesores telefono = await db.Telefonos_Profesores.FindAsync(numero, tipoID,id);
+            Profesore profesore = await db.Profesores.FindAsync(TipoID, id);
+
             if (profesore == null)
             {
                 return NotFound();
             }
+
+            var Tele =
+              from telefono in db.Telefonos_Profesores
+              where telefono.Tipo_ID_Profesor == TipoID && telefono.Identificacion_Profesor == id
+              select telefono.Numero_Telefono;
+
+            int tel = Int32.Parse(Tele.ToString()); 
+
+
+            Telefonos_Profesores telefonos = await db.Telefonos_Profesores.FindAsync(tel, TipoID, id);
+
+            var deleteTele =
+                from telefono in db.Telefonos_Profesores
+                where telefono.Tipo_ID_Profesor == TipoID && telefono.Identificacion_Profesor == id
+                select telefono;
+           
            
 
-            db.Correos_Profesores.Remove(correos);
+            foreach (var detail in deleteTele)
+            {
+
+                db.Telefonos_Profesores.Remove(detail);
+
+            }
+            try
+            {
+                db.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // Provide for exceptions.
+            }
+                  var Correo =
+                      from correo in db.Correos_Profesores
+                      where correo.Tipo_ID_Profesor == TipoID && correo.Identificacion_Profesor == id
+                      select correo.Corre_Electronico;
+                    var deleteCorreo =
+                      from correo in db.Correos_Profesores
+                      where correo.Tipo_ID_Profesor == TipoID && correo.Identificacion_Profesor == id
+                      select correo;
+
+                    Correos_Profesores correos = await db.Correos_Profesores.FindAsync(Correo.ToString(), TipoID, id);
+
+                    foreach (var details in deleteCorreo)
+                    {
+
+                        db.Correos_Profesores.Remove(details);
+                    }
+                    try
+                    {
+                        db.SaveChangesAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        // Provide for exceptions.
+                    }
+        
             db.Profesores.Remove(profesore);
-            db.Telefonos_Profesores.Remove(telefono);
             await db.SaveChangesAsync();
 
             return Ok(profesore);
