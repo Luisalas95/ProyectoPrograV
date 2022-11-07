@@ -26,7 +26,28 @@ namespace WebProyecto.Controllers
             return db.Estudiantes;
         }
 
-       
+        [Route("api/Estudiantes/todosestudiantes")]
+        [HttpGet]
+        public IHttpActionResult getDatosEstudiante()
+        {
+            var idQuery =
+            from ord1 in db.Estudiantes
+            select new
+            {
+                ord1.Nombre,
+                ord1.Primer_Apellido,
+                ord1.Segundo_apellido,
+                ord1.Fecha_Nacimiento,
+                ord1.Tipo_ID,
+                ord1.Identificacion
+            };
+
+
+
+            return Ok(idQuery);
+        }
+
+
 
         // GET: api/Estudiantes/5
         [ResponseType(typeof(Estudiante))]
