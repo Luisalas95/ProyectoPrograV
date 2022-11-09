@@ -6,22 +6,14 @@ using System.Web;
 
 namespace WebProyecto.Models
 {
-    public class estudianteActualiza
+    public class estudiantesClaves
     {
-     
+        [Required]
+        [MaxLength(25)]
         public string tipo_ID { get; set; }
 
-       
+        [Required]
+        [MaxLength(30)]
         public string Identificacion { get; set; }
-
-        public string Nombre { get; set; }
-
-
-        public string primer_Apellido { get; set; }
-
-   
-        public string segundo_apellido { get; set; }
-
-        public DateTime fecha_Nacimiento { get; set; }
     }
 }

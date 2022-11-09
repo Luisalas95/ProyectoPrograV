@@ -55,9 +55,9 @@ namespace WebProyecto.Controllers
             Profesore p2 = new Profesore()
             {
                 Nombre = p.Nombre,
-                Primer_Apellido = p.primerApellido,
-                Segundo_apellido = p.SegundoApellido,
-                Fecha_Nacimiento = p.FechaNacimiento,
+                Primer_Apellido = p.primer_Apellido,
+                Segundo_apellido = p.segundo_apellido,
+                Fecha_Nacimiento = p.fecha_Nacimiento,
                 Identificacion = id,
                 Tipo_ID = tipoid,
             };

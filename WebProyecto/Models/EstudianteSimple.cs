@@ -9,7 +9,6 @@ namespace WebProyecto.Models
     public class EstudianteSimple
     {
         [Required]
-
         [MaxLength(25)]
         public string tipo_ID { get; set; }
 

@@ -66,26 +66,27 @@ namespace WebProyecto.Controllers
 
         // PUT: api/Estudiantes/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutEstudiante(string id, string tipoId, estudianteActualiza e)
+        public async Task<IHttpActionResult> PutEstudiante(estudianteActualiza e)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!EstudianteExists(tipoId) || !EstudianteExists2(id))
+            if (!EstudianteExists(e.tipo_ID) || !EstudianteExists2(e.Identificacion))
             {
                 return NotFound();
             }
 
             Estudiante e2 = new Estudiante()
             {
+                Identificacion = e.Identificacion,
+                Tipo_ID = e.tipo_ID,
                 Nombre = e.Nombre,
-                Primer_Apellido = e.primerApellido,
-                Segundo_apellido = e.SegundoApellido,
-                Fecha_Nacimiento = e.FechaNacimiento,
-                Identificacion = id,
-                Tipo_ID = tipoId,
+                Primer_Apellido = e.primer_Apellido,
+                Segundo_apellido = e.segundo_apellido,
+                Fecha_Nacimiento = e.fecha_Nacimiento,
+             
             };
 
             db.Entry(e2).State = EntityState.Modified;
@@ -94,15 +95,16 @@ namespace WebProyecto.Controllers
             try
             {
                 await db.SaveChangesAsync();
+                return Ok(e2);
             }
+            
             catch (DbUpdateConcurrencyException)
             {
 
                 throw;
             }
 
-
-            return Ok(e2);
+       
         }
 
         [HttpPost]
@@ -216,11 +218,16 @@ namespace WebProyecto.Controllers
 
 
         // DELETE: api/Estudiantes/5
-        [ResponseType(typeof(EstudianteSimple))]
-        public async Task<IHttpActionResult> DeleteEstudiante(string id, string TipoID)
+        [ResponseType(typeof(void))]
+        public async Task<IHttpActionResult> DeleteEstudiante(string id)
         {
-        
-            Estudiante estudiante = await db.Estudiantes.FindAsync(TipoID,id);
+            string[] llaves = id.Split('-');
+            string id2 = llaves[0];
+            string tipoid = llaves[1];
+
+
+
+            Estudiante estudiante = await db.Estudiantes.FindAsync(tipoid, id2);
         
             
             if (estudiante == null)
@@ -229,14 +236,14 @@ namespace WebProyecto.Controllers
             }
             var Correo =
               from correo in db.Correos_Estudiantes
-              where correo.Tipo_ID_Estudiante == TipoID && correo.Identificacion_Estudiante == id
+              where correo.Tipo_ID_Estudiante == tipoid && correo.Identificacion_Estudiante == id2
               select correo.Corre_Electronico;
             var deleteCorreo =
               from correo in db.Correos_Estudiantes
-              where correo.Tipo_ID_Estudiante == TipoID && correo.Identificacion_Estudiante == id
+              where correo.Tipo_ID_Estudiante == tipoid && correo.Identificacion_Estudiante == id2
               select correo;
 
-            Correos_Estudiantes correos = await db.Correos_Estudiantes.FindAsync(Correo.ToString(), TipoID, id);
+            Correos_Estudiantes correos = await db.Correos_Estudiantes.FindAsync(Correo.ToString(), tipoid, id2);
 
             foreach (var details in deleteCorreo)
             {
@@ -245,24 +252,23 @@ namespace WebProyecto.Controllers
             }
             try
             {
-                db.SaveChangesAsync();
+              await  db.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception )
             {
-                Console.WriteLine(e);
-                // Provide for exceptions.
+                throw;  
             }
 
             var Tele =
               from telefono in db.Telefonos_Estudiantes
-              where telefono.Tipo_ID_Estudiante == TipoID && telefono.Identificacion_Estudiante == id
+              where telefono.Tipo_ID_Estudiante == tipoid && telefono.Identificacion_Estudiante == id2
               select telefono.Numero_Telefono;
             var deleteTele=
                 from telefono in db.Telefonos_Estudiantes
-                where telefono.Tipo_ID_Estudiante== TipoID && telefono.Identificacion_Estudiante==id
+                where telefono.Tipo_ID_Estudiante== tipoid && telefono.Identificacion_Estudiante== id2
                 select telefono;
 
-            Telefonos_Estudiantes telefonos = await db.Telefonos_Estudiantes.FindAsync(Tele.ToString(), TipoID, id);
+            Telefonos_Estudiantes telefonos = await db.Telefonos_Estudiantes.FindAsync(Tele.ToString(), tipoid, id2);
 
             foreach (var detail in deleteTele)
                {  
@@ -272,18 +278,17 @@ namespace WebProyecto.Controllers
             }
                try
                {
-                   db.SaveChangesAsync();
+                await db.SaveChangesAsync();
                }
-               catch (Exception e)
+               catch (Exception)
                {
-                   Console.WriteLine(e);
-                   // Provide for exceptions.
+                throw;
                }
             db.Estudiantes.Remove(estudiante);
 
             await db.SaveChangesAsync();
 
-            return Ok(estudiante);
+           return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
 
 

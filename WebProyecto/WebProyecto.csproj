@@ -145,6 +145,7 @@
     <Compile Include="Models\DatosAsistencia.cs" />
     <Compile Include="Models\estudiante.cs" />
     <Compile Include="Models\estudianteActualiza.cs" />
+    <Compile Include="Models\estudiantesClaves.cs" />
     <Compile Include="Models\EstudianteSimple.cs" />
     <Compile Include="Models\grupos.cs" />
     <Compile Include="Models\gruposActualiza.cs" />
