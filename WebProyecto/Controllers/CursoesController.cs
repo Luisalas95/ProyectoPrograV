@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -39,28 +40,28 @@ namespace WebProyecto.Controllers
 
         // PUT: api/Cursoes/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutCurso(string codigocurso, cursoactualiza c)
+        public async Task<IHttpActionResult> PutCurso( cursos c)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!CursoExists(codigocurso))
+            if (!CursoExists(c.Codigo_Curso))
             {
                 return NotFound();
             }
 
-            if (!CarreraExists(c.codigocarrera))
+            if (!CarreraExists(c.Codigo_Carrera))
             {
                 return NotFound();
             }
 
             Curso C1 = new Curso
             {
-                Codigo_Curso = codigocurso,
-                Nombre_Curso = c.nombrecurso,
-                Codigo_Carrera = c.codigocarrera
+                Codigo_Curso = c.Codigo_Curso,
+                Nombre_Curso = c.Nombre_Curso,
+                Codigo_Carrera = c.Codigo_Carrera
 
             };
 
@@ -96,15 +97,16 @@ namespace WebProyecto.Controllers
                 return BadRequest(ModelState);
             }
             // Validar que la carrera exista para poder ligarla al curso
-            if (!CarreraExists(c.codigocarrera))
+            if (!CarreraExists(c.Codigo_Carrera))
             {
                 return NotFound();
             }
+           
             Curso C1 = new Curso()
             {
-                Codigo_Carrera = c.codigocarrera,
-                Nombre_Curso = c.nombrecurso,
-                Codigo_Curso = c.codigocurso,
+                Codigo_Carrera = c.Codigo_Carrera,
+                Nombre_Curso = c.Nombre_Curso,
+                Codigo_Curso = c.Codigo_Curso,
 
             };
 
@@ -119,14 +121,19 @@ namespace WebProyecto.Controllers
             //validar que el curso no este repetido
             catch (DbUpdateException)
             {
-                if (CursoExists(c.codigocurso))
+                if (CursoExists(c.Codigo_Curso))
                 {
                     return Conflict();
                 }
+
                 else
                 {
+
                     throw;
                 }
+
+
+               
             }
 
          

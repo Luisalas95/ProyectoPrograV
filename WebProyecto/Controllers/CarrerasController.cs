@@ -76,22 +76,22 @@ namespace WebProyecto.Controllers
 
         // PUT: api/Carreras/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutCarrera(string CodigoCarrera, carreraActualiza c)
+        public async Task<IHttpActionResult> PutCarrera(carreras C)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!CarreraExists(CodigoCarrera))
+            if (!CarreraExists(C.codigocarrera))
             {
                 return NotFound();
             }
 
             Carrera C1 = new Carrera
             {
-                Codigo_Carrera = CodigoCarrera,
-                Nombre_Carrera = c.nombreCarrera
+                Codigo_Carrera = C.codigocarrera,
+                Nombre_Carrera = C.nombreCarrera
             };
 
 

@@ -250,62 +250,6 @@ namespace WebProyecto.Controllers
             {
                 return NotFound();
             }
-
-            var Tele =
-              from telefono in db.Telefonos_Profesores
-              where telefono.Tipo_ID_Profesor == TipoID && telefono.Identificacion_Profesor == id2
-              select telefono.Numero_Telefono;
-
-            int tel = Int32.Parse(Tele.ToString()); 
-
-
-            Telefonos_Profesores telefonos = await db.Telefonos_Profesores.FindAsync(tel, TipoID, id2);
-
-            var deleteTele =
-                from telefono in db.Telefonos_Profesores
-                where telefono.Tipo_ID_Profesor == TipoID && telefono.Identificacion_Profesor == id2
-                select telefono;
-           
-           
-
-            foreach (var detail in deleteTele)
-            {
-
-                db.Telefonos_Profesores.Remove(detail);
-
-            }
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-                  var Correo =
-                      from correo in db.Correos_Profesores
-                      where correo.Tipo_ID_Profesor == TipoID && correo.Identificacion_Profesor == id2
-                      select correo.Corre_Electronico;
-                    var deleteCorreo =
-                      from correo in db.Correos_Profesores
-                      where correo.Tipo_ID_Profesor == TipoID && correo.Identificacion_Profesor == id2
-                      select correo;
-
-                    Correos_Profesores correos = await db.Correos_Profesores.FindAsync(Correo.ToString(), TipoID, id2);
-
-                    foreach (var details in deleteCorreo)
-                    {
-
-                        db.Correos_Profesores.Remove(details);
-                    }
-                    try
-                    {
-                await db.SaveChangesAsync();
-            }
-                    catch (Exception )
-                    {
-                throw;
-                    }
         
             db.Profesores.Remove(profesore);
             await db.SaveChangesAsync();

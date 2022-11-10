@@ -10,16 +10,16 @@ namespace WebProyecto.Models
     {
         [Required]
         [MaxLength(10)]
-        public string codigocarrera { get; set; }
-
-        [Required]
-        [MaxLength(10)]
-        public string codigocurso { get; set; }
-
+        public string Codigo_Curso { get; set; }
 
         [Required]
         [MaxLength(30)]
-        public string nombrecurso { get; set; }
+        public string Nombre_Curso { get; set; }
+
+
+        [Required]
+        [MaxLength(10)]
+        public string Codigo_Carrera { get; set; }
 
     }
 }
