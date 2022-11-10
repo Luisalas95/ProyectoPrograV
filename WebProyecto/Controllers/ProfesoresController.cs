@@ -193,10 +193,13 @@ namespace WebProyecto.Controllers
 
 
         // DELETE: api/Profesores/5
-        [ResponseType(typeof(Profesore))]
-        public async Task<IHttpActionResult> DeleteProfesore(string TipoID, string id)
+        [ResponseType(typeof(void))]
+        public async Task<IHttpActionResult> DeleteProfesore(string id)
         {
-            Profesore profesore = await db.Profesores.FindAsync(TipoID, id);
+            string[] llaves = id.Split('-');
+            string id2 = llaves[0];
+            string TipoID = llaves[1];
+            Profesore profesore = await db.Profesores.FindAsync(TipoID, id2);
 
             if (profesore == null)
             {
@@ -205,17 +208,17 @@ namespace WebProyecto.Controllers
 
             var Tele =
               from telefono in db.Telefonos_Profesores
-              where telefono.Tipo_ID_Profesor == TipoID && telefono.Identificacion_Profesor == id
+              where telefono.Tipo_ID_Profesor == TipoID && telefono.Identificacion_Profesor == id2
               select telefono.Numero_Telefono;
 
             int tel = Int32.Parse(Tele.ToString()); 
 
 
-            Telefonos_Profesores telefonos = await db.Telefonos_Profesores.FindAsync(tel, TipoID, id);
+            Telefonos_Profesores telefonos = await db.Telefonos_Profesores.FindAsync(tel, TipoID, id2);
 
             var deleteTele =
                 from telefono in db.Telefonos_Profesores
-                where telefono.Tipo_ID_Profesor == TipoID && telefono.Identificacion_Profesor == id
+                where telefono.Tipo_ID_Profesor == TipoID && telefono.Identificacion_Profesor == id2
                 select telefono;
            
            
@@ -228,23 +231,22 @@ namespace WebProyecto.Controllers
             }
             try
             {
-                db.SaveChangesAsync();
+                await db.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
-                // Provide for exceptions.
+                throw;
             }
                   var Correo =
                       from correo in db.Correos_Profesores
-                      where correo.Tipo_ID_Profesor == TipoID && correo.Identificacion_Profesor == id
+                      where correo.Tipo_ID_Profesor == TipoID && correo.Identificacion_Profesor == id2
                       select correo.Corre_Electronico;
                     var deleteCorreo =
                       from correo in db.Correos_Profesores
-                      where correo.Tipo_ID_Profesor == TipoID && correo.Identificacion_Profesor == id
+                      where correo.Tipo_ID_Profesor == TipoID && correo.Identificacion_Profesor == id2
                       select correo;
 
-                    Correos_Profesores correos = await db.Correos_Profesores.FindAsync(Correo.ToString(), TipoID, id);
+                    Correos_Profesores correos = await db.Correos_Profesores.FindAsync(Correo.ToString(), TipoID, id2);
 
                     foreach (var details in deleteCorreo)
                     {
@@ -253,39 +255,55 @@ namespace WebProyecto.Controllers
                     }
                     try
                     {
-                        db.SaveChangesAsync();
+                await db.SaveChangesAsync();
                     }
-                    catch (Exception e)
+                    catch (Exception )
                     {
-                        Console.WriteLine(e);
-                        // Provide for exceptions.
+                throw;
                     }
         
             db.Profesores.Remove(profesore);
             await db.SaveChangesAsync();
 
-            return Ok(profesore);
+                throw;
         }
-        //--------------------------------
 
 
-        [Route("api/Profesores/DatosProfesoresPorID")]
+
+        [Route("api/Profesores/ProfesorxNombre")]
+        [ResponseType(typeof(void))]
         [HttpGet]
-        public async Task<IHttpActionResult> getDatosProfesoresPorID(string id, string TipoID)
+        public IHttpActionResult getDatosProfesorNombre(string id)
         {
-            Profesore Profesor = await db.Profesores.FindAsync(TipoID, id);
+            try
+            {
+         
+                var idQuery =
+                  from ord1 in db.Profesores
+                  where ord1.Nombre.Contains(id)
+                  select new
+        {
+                      ord1.Nombre,
+                      ord1.Primer_Apellido,
+                      ord1.Segundo_apellido,
+                      ord1.Fecha_Nacimiento,
+                      ord1.Tipo_ID,
+                      ord1.Identificacion
+                  };
 
-            if (Profesor == null)
+                if (idQuery.Count() > 0)
+                {
+                    return Ok(idQuery);
+                }
+                else
             {
                 return NotFound();
             }
 
-            var idQuery =
-           from ord1 in db.Profesores
-           from ord in db.Telefonos_Profesores
-           from ord2 in db.Correos_Profesores
-           where TipoID == ord1.Tipo_ID && id == ord1.Identificacion && ord.Identificacion_Profesor == ord1.Identificacion && ord.Tipo_ID_Profesor == ord1.Tipo_ID && ord2.Identificacion_Profesor == ord1.Identificacion && ord2.Tipo_ID_Profesor == ord1.Tipo_ID
-           select new { ord.Tipo_ID_Profesor, ord.Identificacion_Profesor, ord1.Nombre, ord1.Primer_Apellido, ord1.Segundo_apellido, ord.Numero_Telefono, ord1.Fecha_Nacimiento, ord2.Corre_Electronico };
+
+            }
+            catch (Exception)
+            {
 
 
 
