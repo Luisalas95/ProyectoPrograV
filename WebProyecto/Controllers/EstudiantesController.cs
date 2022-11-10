@@ -30,21 +30,38 @@ namespace WebProyecto.Controllers
         [HttpGet]
         public IHttpActionResult getDatosEstudiante()
         {
-            var idQuery =
-            from ord1 in db.Estudiantes
-            select new
+            try
             {
-                ord1.Nombre,
-                ord1.Primer_Apellido,
-                ord1.Segundo_apellido,
-                ord1.Fecha_Nacimiento,
-                ord1.Tipo_ID,
-                ord1.Identificacion
-            };
+                 var idQuery =
+                   from ord1 in db.Estudiantes
+                   select new
+            {
+             ord1.Nombre,
+             ord1.Primer_Apellido,
+             ord1.Segundo_apellido,
+             ord1.Fecha_Nacimiento,
+             ord1.Tipo_ID,
+             ord1.Identificacion
+              };
 
+                if (idQuery.Count()>0)
+                {
+                    return Ok(idQuery);
+                }
+                else
+                {
+                    return NotFound();
+                }
 
+                
+            }
+            catch (Exception)
+            {
 
-            return Ok(idQuery);
+                throw;
+            }
+            
+         
         }
 
 

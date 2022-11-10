@@ -26,28 +26,73 @@ namespace WebProyecto.Controllers
         }
 
         // GET: api/Profesores/5
-        [ResponseType(typeof(Profesore))]
-        public async Task<IHttpActionResult> GetProfesore(string tipoID,string id)
+        [ResponseType(typeof(profesorConsulta))]
+        public async Task<IHttpActionResult> GetProfesore(string id)
         {
-            Profesore profesore = await db.Profesores.FindAsync(tipoID,id);
-            if (profesore == null)
+            string[] llaves = id.Split('-');
+            string id2 = llaves[0];
+            string tipoid = llaves[1];
+
+            Profesore profesorConsulta = await db.Profesores.FindAsync(id2,tipoid);
+            if (profesorConsulta == null)
             {
                 return NotFound();
             }
 
-            return Ok(profesore);
+            return Ok(profesorConsulta);
         }
+
+        [Route("api/Profesores/ConsultaProfesores")]
+        [HttpGet]
+        public IHttpActionResult getDatosProfesores()
+        {
+            try
+            {
+                var idQuery =
+                  from ord1 in db.Profesores
+                  select new
+                  {
+                      ord1.Tipo_ID,
+                      ord1.Identificacion,
+                      ord1.Nombre,
+                      ord1.Primer_Apellido,
+                      ord1.Segundo_apellido,
+                      ord1.Fecha_Nacimiento
+                     
+                  };
+
+                if (idQuery.Count() > 0)
+                {
+                    return Ok(idQuery);
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+        }
+
+
 
         // PUT: api/Profesores/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutProfesore(string id, string tipoid, estudianteActualiza p)
+        public async Task<IHttpActionResult> PutProfesore( estudianteActualiza p)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!ProfesoreExists(tipoid) || !ProfesoreExists2(id))
+            if (!ProfesoreExists(p.tipo_ID) || !ProfesoreExists2(p.Identificacion))
             {
                 return NotFound();
             }
@@ -58,8 +103,8 @@ namespace WebProyecto.Controllers
                 Primer_Apellido = p.primer_Apellido,
                 Segundo_apellido = p.segundo_apellido,
                 Fecha_Nacimiento = p.fecha_Nacimiento,
-                Identificacion = id,
-                Tipo_ID = tipoid,
+               Identificacion = p.Identificacion,
+               Tipo_ID = p.tipo_ID
             };
 
 
@@ -256,7 +301,7 @@ namespace WebProyecto.Controllers
                     try
                     {
                 await db.SaveChangesAsync();
-                    }
+            }
                     catch (Exception )
                     {
                 throw;
@@ -264,25 +309,22 @@ namespace WebProyecto.Controllers
         
             db.Profesores.Remove(profesore);
             await db.SaveChangesAsync();
-
-                throw;
+            return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
-
-
-
-        [Route("api/Profesores/ProfesorxNombre")]
-        [ResponseType(typeof(void))]
+        //--------------------------------
+        [Route("api/Profesores/ProfesorID")]
         [HttpGet]
-        public IHttpActionResult getDatosProfesorNombre(string id)
+        public IHttpActionResult getDatosProfesor(string id)
         {
             try
             {
-         
+                string[] llaves = id.Split('-');
+                string id2 = llaves[0];
+                string tipoid = llaves[1];
                 var idQuery =
-                  from ord1 in db.Profesores
-                  where ord1.Nombre.Contains(id)
+                  from ord1 in db.Profesores where ord1.Identificacion == id2 & ord1.Tipo_ID == tipoid 
                   select new
-        {
+                  {
                       ord1.Nombre,
                       ord1.Primer_Apellido,
                       ord1.Segundo_apellido,
@@ -296,30 +338,73 @@ namespace WebProyecto.Controllers
                     return Ok(idQuery);
                 }
                 else
-            {
-                return NotFound();
-            }
+                {
+                    return NotFound();
+                }
 
 
             }
             catch (Exception)
             {
 
+                throw;
+            }
 
 
-            return Ok(idQuery);
         }
+
+        [Route("api/Profesores/ProfesorxNombre")]
+        [ResponseType(typeof(void))]
+        [HttpGet]
+        public IHttpActionResult getDatosProfesorNombre(string id)
+        {
+            try
+            {
+         
+                var idQuery =
+                  from ord1 in db.Profesores
+                  where ord1.Nombre.Contains(id)
+                  select new
+                  {
+                      ord1.Nombre,
+                      ord1.Primer_Apellido,
+                      ord1.Segundo_apellido,
+                      ord1.Fecha_Nacimiento,
+                      ord1.Tipo_ID,
+                      ord1.Identificacion
+                  };
+
+                if (idQuery.Count() > 0)
+                {
+                    return Ok(idQuery);
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+        }
+
 
         //-----------------------------
         //--------------------------------
 
 
-    
+
 
         //--------------
 
- 
-               [ResponseType(typeof(Profesore))]
+
+        [ResponseType(typeof(Profesore))]
         [Route("api/Profesores/DatosProfesoresPorApellidos", Name ="getProfesoresPorApellidos")]
 
         public HttpResponseMessage getDatosProfesoresPorApellidos(string Apellido1,string Apellido2)

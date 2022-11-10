@@ -152,6 +152,7 @@
     <Compile Include="Models\matricula.cs" />
     <Compile Include="Models\periodos.cs" />
     <Compile Include="Models\profesor.cs" />
+    <Compile Include="Models\profesorConsulta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
