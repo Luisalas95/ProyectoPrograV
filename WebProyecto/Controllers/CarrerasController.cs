@@ -24,6 +24,43 @@ namespace WebProyecto.Controllers
             return db.Carreras;
         }
 
+        [Route("api/Carreras/ConsultaCarreras")]
+        [HttpGet]
+        public IHttpActionResult getDatosCarreras()
+        {
+            try
+            {
+                var idQuery =
+                  from ord1 in db.Carreras
+                  select new
+                  {
+                      ord1.Codigo_Carrera,
+                      ord1.Nombre_Carrera
+
+                  };
+
+                if (idQuery.Count() > 0)
+                {
+                    return Ok(idQuery);
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+        }
+
+
+
         // GET: api/Carreras/5
         [ResponseType(typeof(Carrera))]
         public async Task<IHttpActionResult> GetCarrera(string id)
