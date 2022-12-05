@@ -131,9 +131,13 @@ namespace WebProyecto.Controllers
 
         // DELETE: api/Periodoes/5
         [ResponseType(typeof(Periodo))]
-        public async Task<IHttpActionResult> DeletePeriodo(int id, int NumPerido)
+        public async Task<IHttpActionResult> DeletePeriodo(string id)
         {
-            Periodo periodo = await db.Periodoes.FindAsync(id, NumPerido);
+            string[] llaves = id.Split('-');
+            int anno = int.Parse(llaves[0]);
+            int numperiodo = int.Parse(llaves[1]);
+
+            Periodo periodo = await db.Periodoes.FindAsync(anno, numperiodo);
             if (periodo == null)
             {
                 return NotFound();
