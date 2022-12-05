@@ -10,6 +10,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.UI.WebControls;
 using ProyectoPrograV;
 using WebProyecto.Models;
 
@@ -38,39 +39,96 @@ namespace WebProyecto.Controllers
             return Ok(periodo);
         }
 
+        [Route("api/Periodoes/periodosordenados")]
+        [HttpGet]
+        public IHttpActionResult getPeriodos()
+        {
+            try
+            {
+               // db.Periodoes.OrderByDescending(periodo => periodo.Fecha_Inicio);
+                
+                var idQuery = from ord1 in db.Periodoes
+                              orderby ord1.Fecha_Inicio descending
+                              select new
+                              {
+                                  ord1.Anno,
+                                  ord1.Fecha_Inicio,
+                                  ord1.Fecha_Fin,
+                                 //fechafin = DateTime.Parse(ord1.Fecha_Fin.ToString()).ToString("dd/MM/yyyy"),
+                                  ord1.NumeroPeriodo,
+                                  ord1.Estado,
+                                
+                              };
+
+
+
+
+                if (idQuery.Count() > 0)
+                {
+                    return Ok(idQuery);
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+        }
+
+
+
+
+
         // PUT: api/Periodoes/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutPeriodo(int id, Periodo periodo)
+        public async Task<IHttpActionResult> PutPeriodo(periodos p)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != periodo.Anno)
+            if (!PeriodoExists(p.anno) || !PeriodoExistsNuPeriodo(p.numeroPeriodo))
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(periodo).State = EntityState.Modified;
+            if (EstadoActivoExist(p.estado.ToUpper()))
+            {
+                return BadRequest("Solo puede existir un periodo activo");
 
+            }
+
+            Periodo e2 = new Periodo()
+            {
+                Anno = p.anno,
+                NumeroPeriodo = p.numeroPeriodo,
+                Fecha_Inicio = p.fechaInicio,
+                Fecha_Fin = p.fechafinal,
+                Estado = p.estado,
+
+            };
+
+            db.Entry(e2).State = EntityState.Modified;
             try
             {
                 await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PeriodoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Ok(e2);
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            catch (DbUpdateConcurrencyException)
+            {
+
+                throw;
+            }
         }
 
     
