@@ -100,19 +100,30 @@ namespace WebProyecto.Controllers
 
         // PUT: api/Grupos/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutGrupos(byte id, Grupos grupos)
+        public async Task<IHttpActionResult> PutGrupos(grupos G)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != grupos.Numero_Grupo)
+            if (!PeriodoExists(G.anno) || !PeriodoExistsNuPeriodo(G.numeroPeriodo))
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(grupos).State = EntityState.Modified;
+
+            Grupos e2 = new Grupos()
+            {
+              Numero_Grupo = G.numerogrupo,
+              Codigo_Curs = G.codigocurso,
+              Identificacion_Profesor = G.Identificacion,
+              Horario = G.Horario,
+              Anno = G.anno,
+              NumeroPeriodo = G.numeroPeriodo,
+              Tipo_ID_Profeso = G.tipo_ID
+
+            };
 
             try
             {
@@ -120,12 +131,7 @@ namespace WebProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GruposExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
+
                     throw;
                 }
             }
@@ -245,28 +251,22 @@ namespace WebProyecto.Controllers
 
             // DELETE: api/Grupos/5
             [ResponseType(typeof(Grupos))]
-        public async Task<IHttpActionResult> DeleteGrupos(byte numeroGrupo,string CodigoCurso, int periodo, int anno)
+        public async Task<IHttpActionResult> DeleteGrupos(string id)
         {
-            Grupos grupos = await db.Grupos.FindAsync(numeroGrupo, CodigoCurso);
-            if (grupos == null)
+            string[] llaves = id.Split('_');
+            int numerogrupo = int.Parse(llaves[0]);
+            string codigocurso = llaves[1];
+
+            Grupos G = await db.Grupos.FindAsync(numerogrupo,codigocurso);
+            if (G == null)
             {
                 return NotFound();
             }
-            var idQuery =
-            from ord in db.Grupos
-            where numeroGrupo == ord.Numero_Grupo && CodigoCurso == ord.Codigo_Curs && periodo.Equals(ord.Periodo) && anno == ord.Anno
-            select new {ord.Numero_Grupo,ord.Codigo_Curs,ord.Anno,ord.NumeroPeriodo };
 
-            db.Grupos.Remove(grupos); /* (grupos.Numero_Grupo.Equals(numeroGrupo)||grupos.Codigo_Curs==CodigoCurso||
-                grupos.Anno==anno||grupos.Periodo.Equals(periodo));
-            */
-
-
-
-            db.Grupos.Remove(grupos);
+            db.Grupos.Remove(G);
             await db.SaveChangesAsync();
 
-            return Ok(grupos);
+            return Ok(G);
         }
         //--------------------------------
 
