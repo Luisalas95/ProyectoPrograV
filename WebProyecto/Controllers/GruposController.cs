@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.UI.WebControls;
 using ProyectoPrograV;
 using WebProyecto.Models;
 
@@ -25,6 +26,64 @@ namespace WebProyecto.Controllers
         {
             return db.Grupos;
         }
+
+        [Route("api/Grupos/ListaGrupos")]
+        [HttpGet]
+        public IHttpActionResult getgrupos()
+        {
+            try
+            {
+                // db.Periodoes.OrderByDescending(periodo => periodo.Fecha_Inicio);
+
+                //orderby ord1.Fecha_Inicio descending
+                var idQuery = from grupos in db.Grupos
+                              from curso in db.Cursos
+                              from carrera in db.Carreras
+                              from profesor in db.Profesores
+                              from periodo in db.Periodoes
+                              orderby grupos.Anno ascending
+                              orderby grupos.NumeroPeriodo ascending
+                              where grupos.Tipo_ID_Profeso == profesor.Tipo_ID && grupos.Identificacion_Profesor == profesor.Identificacion
+                              && grupos.Codigo_Curs == curso.Codigo_Curso && curso.Codigo_Carrera == carrera.Codigo_Carrera
+                              && grupos.Anno == periodo.Anno && grupos.NumeroPeriodo == periodo.NumeroPeriodo
+                              // && periodo.Estado == "A" || periodo.Estado == "F" 
+                              select new
+                              {
+                                  grupos.Numero_Grupo,
+                                  grupos.Codigo_Curs,
+                                  curso.Nombre_Curso,
+                                  carrera.Nombre_Carrera,
+                                  periodo.Anno,
+                                  periodo.NumeroPeriodo,
+                                  grupos.Horario,
+                                  profesor.Nombre,
+                                  profesor.Primer_Apellido,
+                                  profesor.Tipo_ID,
+                                  profesor.Identificacion,
+                              };
+
+                if (idQuery.Count() > 0)
+                {
+                    return Ok(idQuery);
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+        }
+
+
+
 
         // GET: api/Grupos/5
         [ResponseType(typeof(Grupos))]
