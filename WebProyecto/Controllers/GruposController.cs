@@ -125,18 +125,18 @@ namespace WebProyecto.Controllers
 
             };
 
+            db.Entry(e2).State = EntityState.Modified;
             try
             {
                 await db.SaveChangesAsync();
+                return Ok(e2);
             }
+
             catch (DbUpdateConcurrencyException)
             {
 
-                    throw;
-                }
+                throw;
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST: api/Grupos
