@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ProyectoPrograV;
@@ -124,7 +125,28 @@ namespace WebProyecto.Controllers
        
         }
 
+
         [HttpPost]
+        [Route("api/Estudiantes/Validaestudiante")]
+        [ResponseType(typeof(void))]
+        public async Task<IHttpActionResult> Validaestudiante
+        ([FromBody] estudiantevalida e)
+        {
+            Estudiante estudiante = await db.Estudiantes.FindAsync(e.tipo_ID, e.Identificacion);
+            if (estudiante == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(e);
+
+
+
+        }
+
+
+
+            [HttpPost]
         [Route("api/Estudiantes/CrearEstudiante")]
         [ResponseType(typeof(estudiante))]
         public async Task<IHttpActionResult> CrearEstudiante

@@ -150,7 +150,7 @@ namespace WebProyecto.Controllers
         [Route("api/Asistencias/CrearAsistencia")]
         [ResponseType(typeof(asistencia))]
         public async Task<IHttpActionResult> CrearAsistencia
- ([FromBody] asistencia a)
+            ([FromBody] asistencia a)
 
         {
             if (!ModelState.IsValid)

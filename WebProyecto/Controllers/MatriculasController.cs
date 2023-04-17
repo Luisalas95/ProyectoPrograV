@@ -37,6 +37,55 @@ namespace WebProyecto.Controllers
             return Ok(matricula);
         }
 
+
+        [Route("api/Matriculas/Grupos_cursos_estudiante")]
+        [HttpGet]
+        public async Task<IHttpActionResult> Getcursos_grupos(string id)
+        {
+            string[] llaves = id.Split('-');
+            string id2 = llaves[0];
+            string tipoid = llaves[1];
+
+
+         
+
+           var idQuery =
+           from matricula in db.Matriculas
+           from cursos in db.Cursos
+           from carrera in db.Carreras
+           where matricula.Identificacion_Estudiante == id2 
+           && matricula.Tipo_ID_Estudiante == tipoid
+           && matricula.Codigo_Curso == cursos.Codigo_Curso
+           && cursos.Codigo_Carrera == carrera.Codigo_Carrera
+
+           select new
+           {
+               cursos.Nombre_Curso,
+               carrera.Nombre_Carrera,
+               matricula.Numero_Grupo,
+               matricula.Codigo_Curso,
+
+           };
+
+
+            if (idQuery.Count() > 0)
+            {
+                return Ok(idQuery);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+      
+        
+
+
+
+
+
+
         // PUT: api/Matriculas/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutMatricula(string id, Matricula matricula)

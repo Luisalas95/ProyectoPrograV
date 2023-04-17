@@ -429,7 +429,7 @@ namespace WebProyecto.Controllers
            && grupos.Identificacion_Profesor == profeso.Identificacion
            && grupos.Anno == period.Anno
            && grupos.NumeroPeriodo == period.NumeroPeriodo
-        
+           && period.Estado == "A"
         
 
            select new
@@ -441,11 +441,20 @@ namespace WebProyecto.Controllers
                profeso.Nombre,
                profeso.Primer_Apellido,
                profeso.Segundo_apellido,
+   
               
            };
 
 
-            return Ok(idQuery);
+            if (idQuery.Count() > 0)
+            {
+                return Ok(idQuery);
+            }
+            else
+            {
+                return NotFound();
+            }
+
         }
 
         //------------------------------
