@@ -421,25 +421,26 @@ namespace WebProyecto.Controllers
             }
 
             var idQuery =
-           from ord1 in db.Grupos
-           from ord in db.Carreras
-           from ord2 in db.Cursos
-           from ord3 in db.Profesores
-           where CodCurso == ord2.Codigo_Curso  &&
-           CodCurso == ord1.Codigo_Curs
+           from grupos in db.Grupos
+           from profeso in db.Profesores
+           from period in db.Periodoes
+           where grupos.Codigo_Curs == CodCurso
+           && grupos.Tipo_ID_Profeso == profeso.Tipo_ID
+           && grupos.Identificacion_Profesor == profeso.Identificacion
+           && grupos.Anno == period.Anno
+           && grupos.NumeroPeriodo == period.NumeroPeriodo
+        
+        
+
            select new
            {
-               ord1.Numero_Grupo,
-               ord2.Codigo_Curso,
-               ord2.Nombre_Curso,
-               ord1.NumeroPeriodo,
-               ord1.Anno,
-               ord1.Horario,
-               ord3.Nombre,
-               ord3.Primer_Apellido,
-               ord3.Segundo_apellido,
-               ord3.Tipo_ID,
-               ord3.Identificacion
+               grupos.Numero_Grupo,
+               grupos.Horario,
+               grupos.Anno,
+               grupos.NumeroPeriodo,
+               profeso.Nombre,
+               profeso.Primer_Apellido,
+               profeso.Segundo_apellido,
               
            };
 
